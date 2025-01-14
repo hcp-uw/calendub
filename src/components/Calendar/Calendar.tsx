@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './Calendar.css';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -39,7 +40,7 @@ const Calendar = () => {
       } else {
         days.push(
           <div key={day} className="calendar-cell">
-            <div>{day}</div>
+            <div className="day">{day}</div>
           </div>
         );
       }
@@ -55,16 +56,19 @@ const Calendar = () => {
   };
 
   return (
-    <div>
-      <div>
-        <div>
-          <h2>
-            {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-          </h2>
+    <div className="calendar-container">
+      <div className="calendar-header">
+        <div className="calendar-nav">
+          <button onClick={() => changeMonth(-1)}>
+            <FaChevronLeft size={14} />
+          </button>
+          <button onClick={() => changeMonth(1)}>
+            <FaChevronRight size={14} />
+          </button>
         </div>
         <div>
-          <button onClick={() => changeMonth(-1)}>{'<'}</button>
-          <button onClick={() => changeMonth(1)}>{'>'}</button>
+          <h1>{monthNames[currentDate.getMonth()]}</h1>
+          <h3>{currentDate.getFullYear()}</h3>
         </div>
       </div>
       <div className="calendar-grid">{renderCalendarDays()}</div>
