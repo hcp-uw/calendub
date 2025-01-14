@@ -38,7 +38,7 @@ const Calendar = () => {
 
     for (let day = 0; day < 7; day++) {
       days.push(
-        <div key={day} className="calendar-cell">
+        <div key={'weekDay' + day} className="calendar-cell">
           <div className="day">{weekDayNames[day]}</div>
         </div>
       );
@@ -46,7 +46,7 @@ const Calendar = () => {
 
     for (let day = -firstDay + 1; day <= totalDayCells; day++) {
       days.push(
-        <div key={day} className="calendar-cell">
+        <div key={'day' + day} className="calendar-cell">
           <div className="day">{day > 0 && day <= daysInMonth ? day : ''}</div>
           <CalendarEvent name="Super Long Event Name" color="#ad88e8" />
           <CalendarEvent name="Event Name" color="#67ad88" />
