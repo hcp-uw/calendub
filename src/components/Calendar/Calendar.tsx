@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './Calendar.css';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { CalendarEvent } from 'components';
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -47,6 +48,8 @@ const Calendar = () => {
       days.push(
         <div key={day} className="calendar-cell">
           <div className="day">{day > 0 && day <= daysInMonth ? day : ''}</div>
+          <CalendarEvent name="Super Long Event Name" color="#ad88e8" />
+          <CalendarEvent name="Event Name" color="#67ad88" />
         </div>
       );
     }
