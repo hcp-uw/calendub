@@ -1,0 +1,16 @@
+.calendar-grid {
+  display: grid;
+  width: 55rem;
+  grid-template-columns: repeat(7, 1fr);
+  border-top: 1px solid #000000;
+}
+
+.calendar-cell {
+  height: 8rem;
+  border-left: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+}
+
+.calendar-cell:nth-child(7n) {
+  border-right: 1px solid #000000;
+}
