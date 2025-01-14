@@ -18,6 +18,7 @@ const Calendar = () => {
     'November',
     'December',
   ];
+  const weekDayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
   const getDaysInMonth = (date: Date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -34,16 +35,20 @@ const Calendar = () => {
     const totalDayCells =
       daysInMonth + ((7 - ((daysInMonth + firstDay) % 7)) % 7);
 
+    for (let day = 0; day < 7; day++) {
+      days.push(
+        <div key={day} className="calendar-cell">
+          <div className="day">{weekDayNames[day]}</div>
+        </div>
+      );
+    }
+
     for (let day = -firstDay + 1; day <= totalDayCells; day++) {
-      if (day <= 0 || day > daysInMonth) {
-        days.push(<div key={day} className="calendar-cell"></div>);
-      } else {
-        days.push(
-          <div key={day} className="calendar-cell">
-            <div className="day">{day}</div>
-          </div>
-        );
-      }
+      days.push(
+        <div key={day} className="calendar-cell">
+          <div className="day">{day > 0 && day <= daysInMonth ? day : ''}</div>
+        </div>
+      );
     }
 
     return days;
