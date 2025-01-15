@@ -6,6 +6,7 @@ import { Event } from 'types/Event';
 
 interface CalendarProps {
   setSelectedEvent: (event: Event) => void;
+  events: Event[];
 }
 
 const Calendar = (props: CalendarProps) => {
@@ -25,36 +26,25 @@ const Calendar = (props: CalendarProps) => {
     'December',
   ];
   const weekDayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-  // TODO: how is this going to be structured?
-  const events = [
-    {
-      id: 1,
-      name: 'General Meeting',
-      date: '2025-01-14',
-      time: '6:00-7:30pm',
-      location: 'MOR 220',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc.',
-    },
-    {
-      id: 2,
-      name: 'Another Event',
-      date: '2025-01-14',
-      time: '8:00-9:30am',
-      location: 'Somewhere',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc.',
-    },
-    {
-      id: 3,
-      name: 'Event but with a Long Name',
-      date: '2025-01-17',
-      time: '1:00-2:30pm',
-      location: 'The Quad',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc.',
-    },
+  const colors = [
+    '#d39d9d',
+    '#d3b49d',
+    '#d2d39d',
+    '#9dd3ad',
+    '#9db4d3',
+    '#ad9dd3',
   ];
+  const eventColors: Record<string, string> = {};
+
+  const getColorForEvent = (eventType: string) => {
+    if (!eventColors[eventType]) {
+      eventColors[eventType] =
+        colors[Object.keys(eventColors).length % colors.length];
+    }
+    return eventColors[eventType];
+  };
+
+  const events = props.events;
 
   const getDaysInMonth = (date: Date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -96,7 +86,7 @@ const Calendar = (props: CalendarProps) => {
             <CalendarEvent
               key={event.id}
               name={event.name}
-              color="#ad88e8"
+              color={getColorForEvent(event.type)}
               onClick={() => props.setSelectedEvent(event)}
             />
           ))}
