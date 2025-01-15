@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Calendar, EventDetails } from 'components';
+import { Header, Calendar, EventDetails, PageHeader } from 'components';
 import { Event } from 'types/Event';
 import 'App.css';
 
@@ -7,6 +7,7 @@ const App = () => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   // TODO: How will this be structured?
+  // Test events => feel free to change the values for testing
   // date and time field NOT FINAL => need to account for timezones (unless it's worked out in the backend)
   const testEvents = [
     {
@@ -83,7 +84,11 @@ const App = () => {
 
   return (
     <div className="app">
-      {selectedEvent && <EventDetails selectedEvent={selectedEvent} />}
+      <div className="sidebar">
+        <Header />
+        <PageHeader />
+        {selectedEvent && <EventDetails selectedEvent={selectedEvent} />}
+      </div>
       <Calendar setSelectedEvent={setSelectedEvent} events={testEvents} />
     </div>
   );
