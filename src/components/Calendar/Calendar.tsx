@@ -35,7 +35,9 @@ const Calendar = (props: CalendarProps) => {
     '#ad9dd3',
   ];
   const eventColors: Record<string, string> = {};
+  const events = props.events;
 
+  // For an event type, it returns a unique color (repeats colors if needed)
   const getColorForEvent = (eventType: string) => {
     if (!eventColors[eventType]) {
       eventColors[eventType] =
@@ -44,23 +46,25 @@ const Calendar = (props: CalendarProps) => {
     return eventColors[eventType];
   };
 
-  const events = props.events;
-
+  // Get the number of days in a month
   const getDaysInMonth = (date: Date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
   };
 
+  // Get the day of the week for the first day of the month
   const getFirstDayOfMonth = (date: Date) => {
     return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
   };
 
+  // Render the calendar in a grid
   const renderCalendarDays = () => {
     const days = [];
     const daysInMonth = getDaysInMonth(currentDate);
     const firstDay = getFirstDayOfMonth(currentDate);
     const totalDayCells =
-      daysInMonth + ((7 - ((daysInMonth + firstDay) % 7)) % 7);
+      daysInMonth + ((7 - ((daysInMonth + firstDay) % 7)) % 7); // Ensure complete row in grid
 
+    // Days of the week (SUN, MON, TUE, etc.)
     for (let day = 0; day < 7; day++) {
       days.push(
         <div key={'weekDay' + day} className="calendar-cell">
@@ -69,8 +73,8 @@ const Calendar = (props: CalendarProps) => {
       );
     }
 
+    // Days of the month
     for (let day = -firstDay + 1; day <= totalDayCells; day++) {
-      // TODO: account for time zones
       const date = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth(),
@@ -97,6 +101,7 @@ const Calendar = (props: CalendarProps) => {
     return days;
   };
 
+  // Changes the current month based on the increment (1 or -1)
   const changeMonth = (increment: number) => {
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() + increment, 1)
