@@ -1,10 +1,21 @@
 import { useState } from 'react';
-import { Header, Calendar, EventDetails, PageHeader } from 'components';
+import {
+  Header,
+  Calendar,
+  EventDetails,
+  PageHeader,
+  CalendarHeader,
+} from 'components';
 import { Event } from 'types/Event';
 import 'App.css';
 
 const App = () => {
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+
+  const updateCurrentDate = (newCurrentDate: Date) => {
+    setCurrentDate(newCurrentDate);
+  };
 
   // TODO: How will this be structured?
   // Test events => feel free to change the values for testing
@@ -84,12 +95,29 @@ const App = () => {
 
   return (
     <div className="app">
-      <div className="sidebar">
+      {/** This is a 2x2 grid layout
+       * According to the current Figma design, the layout is as follows:
+       * (Header)        | (CalendarHeader, SearchBar, Profile)
+       * ________________|______________________________________
+       * (PageHeader)    | (Calendar)
+       * (EventDetails)  |
+       */}
+      <div className="grid">
         <Header />
-        <PageHeader />
-        {selectedEvent && <EventDetails selectedEvent={selectedEvent} />}
+        <CalendarHeader
+          currentDate={currentDate}
+          updateCurrentDate={updateCurrentDate}
+        />
+        <div className="sidebar">
+          <PageHeader />
+          {selectedEvent && <EventDetails selectedEvent={selectedEvent} />}
+        </div>
+        <Calendar
+          setSelectedEvent={setSelectedEvent}
+          events={testEvents}
+          currentDate={currentDate}
+        />
       </div>
-      <Calendar setSelectedEvent={setSelectedEvent} events={testEvents} />
     </div>
   );
 };

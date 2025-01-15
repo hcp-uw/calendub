@@ -1,30 +1,14 @@
-import { useState } from 'react';
 import './Calendar.css';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { CalendarEvent } from 'components';
 import { Event } from 'types/Event';
 
 interface CalendarProps {
   setSelectedEvent: (event: Event) => void;
   events: Event[];
+  currentDate: Date;
 }
 
 const Calendar = (props: CalendarProps) => {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
   const weekDayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
   const colors = [
     '#d39d9d',
@@ -36,6 +20,7 @@ const Calendar = (props: CalendarProps) => {
   ];
   const eventColors: Record<string, string> = {};
   const events = props.events;
+  const currentDate = props.currentDate;
 
   // For an event type, it returns a unique color (repeats colors if needed)
   const getColorForEvent = (eventType: string) => {
@@ -101,32 +86,7 @@ const Calendar = (props: CalendarProps) => {
     return days;
   };
 
-  // Changes the current month based on the increment (1 or -1)
-  const changeMonth = (increment: number) => {
-    setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() + increment, 1)
-    );
-  };
-
-  return (
-    <div className="calendar-container">
-      <div className="calendar-header">
-        <div className="calendar-nav">
-          <button onClick={() => changeMonth(-1)}>
-            <FaChevronLeft size={14} />
-          </button>
-          <button onClick={() => changeMonth(1)}>
-            <FaChevronRight size={14} />
-          </button>
-        </div>
-        <div>
-          <h1>{monthNames[currentDate.getMonth()]}</h1>
-          <h3>{currentDate.getFullYear()}</h3>
-        </div>
-      </div>
-      <div className="calendar-grid card">{renderCalendarDays()}</div>
-    </div>
-  );
+  return <div className="calendar-grid card">{renderCalendarDays()}</div>;
 };
 
 export default Calendar;
