@@ -1,9 +1,8 @@
 import './Calendar.css';
 import { CalendarEvent } from 'components';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { FaClock, FaHashtag, FaPlus } from 'react-icons/fa';
 import { FaLocationDot } from 'react-icons/fa6';
-import { GrTextAlignFull } from 'react-icons/gr';
 import { Event } from 'types/Event';
 
 interface CalendarProps {
@@ -23,7 +22,7 @@ const Calendar = (props: CalendarProps) => {
     '#ad9dd3',
   ];
   const eventColors: Record<string, string> = {};
-  const events = props.events;
+  const [events, setEvents] = useState(props.events);
   const currentDate = props.currentDate;
 
   // For an event type, it returns a unique color (repeats colors if needed)
@@ -90,7 +89,55 @@ const Calendar = (props: CalendarProps) => {
     return days;
   };
 
+  const addEvent = (
+    title: string,
+    date: string,
+    startTime: string,
+    endTime: string,
+    location: string,
+    description: string,
+    type: string
+  ) => {
+    if (
+      title !== '' &&
+      date !== '' &&
+      startTime !== '' &&
+      endTime !== '' &&
+      location !== '' &&
+      description !== '' &&
+      type !== ''
+    ) {
+      setEvents([
+        ...events,
+        {
+          id: events.length,
+          name: title,
+          date: date,
+          time: `${startTime}-${endTime}`,
+          location: location,
+          type: type,
+          description: description,
+        },
+      ]);
+      setTitle('');
+      setDate('');
+      setStartTime('');
+      setEndTime('');
+      setLocation('');
+      setType('');
+      setDescription('');
+      addEventRef.current.close();
+    }
+  };
+
   const addEventRef = useRef(null);
+  const [title, setTitle] = useState('');
+  const [date, setDate] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [location, setLocation] = useState('');
+  const [type, setType] = useState('');
+  const [description, setDescription] = useState('');
   return (
     <div className="calendar">
       <div className="calendar-bar">
@@ -106,29 +153,70 @@ const Calendar = (props: CalendarProps) => {
       <dialog ref={addEventRef} className="card">
         <div className="add-event-modal">
           <h2>Add event</h2>
-          <input type="text" placeholder="Add title" />
+          <input
+            type="text"
+            placeholder="Add title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
           <span>
             <FaClock size={16} color="#282828" />
-            <input type="date" />
-            <input type="time" /> -
-            <input type="time" />
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+            <input
+              type="time"
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+            />
+            -
+            <input
+              type="time"
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
+            />
           </span>
           <span>
             <FaLocationDot size={16} color="#282828" />
-            <input type="text" placeholder="Add location" />
+            <input
+              type="text"
+              placeholder="Add location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
           </span>
           <span>
             <FaHashtag size={16} color="#282828" />
-            <select>
+            <select value={type} onChange={(e) => setType(e.target.value)}>
               <option value="Test1">Test1</option>
               <option value="Test2">Test2</option>
               <option value="Test3">Test3</option>
             </select>
           </span>
-          <textarea placeholder="Add description"></textarea>
+          <textarea
+            placeholder="Add description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          ></textarea>
           <span>
             <button onClick={() => addEventRef.current.close()}>Cancel</button>
-            <button>Add</button>
+            <button
+              onClick={() =>
+                addEvent(
+                  title,
+                  date,
+                  startTime,
+                  endTime,
+                  location,
+                  description,
+                  type
+                )
+              }
+            >
+              Add
+            </button>
           </span>
         </div>
       </dialog>
