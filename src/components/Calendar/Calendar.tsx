@@ -126,11 +126,11 @@ const Calendar = (props: CalendarProps) => {
       setLocation('');
       setType('');
       setDescription('');
-      addEventRef.current.close();
+      addEventRef.current?.close();
     }
   };
 
-  const addEventRef = useRef(null);
+  const addEventRef = useRef<HTMLDialogElement>(null);
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [startTime, setStartTime] = useState('');
@@ -144,7 +144,7 @@ const Calendar = (props: CalendarProps) => {
         <select>
           <option>Month</option>
         </select>
-        <button onClick={() => addEventRef.current.showModal()}>
+        <button onClick={() => addEventRef.current?.showModal()}>
           <FaPlus size={8} />
           Add event
         </button>
@@ -201,7 +201,7 @@ const Calendar = (props: CalendarProps) => {
             onChange={(e) => setDescription(e.target.value)}
           ></textarea>
           <span>
-            <button onClick={() => addEventRef.current.close()}>Cancel</button>
+            <button onClick={() => addEventRef.current?.close()}>Cancel</button>
             <button
               onClick={() =>
                 addEvent(
