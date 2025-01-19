@@ -6,6 +6,10 @@ dotenv.config({ path: '.env.local' });
 
 beforeAll(async () => {
   await mongoose.connect(process.env.MONGO_URI);
+  const collections = await mongoose.connection.db.collections();
+  for (let collection of collections) {
+    await collection.deleteMany();
+  }
 });
 
 afterEach(async () => {
@@ -28,9 +32,9 @@ describe('Event API', () => {
 
   test('POST /api/events should create a new event', async () => {
     const newEvent = {
-      title: 'Conference 2025',
-      startTime: '2025-03-15T10:00:00.000Z',
-      endTime: '2025-03-15T12:00:00.000Z',
+      title: 'Writing this test',
+      startTime: new Date(2025, 0, 19, 12, 58),
+      endTime: new Date(2025, 0, 19, 12, 59)
     };
 
     const res = await request(app).post('/api/events').send(newEvent);
