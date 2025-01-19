@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Header,
   Calendar,
@@ -15,6 +15,20 @@ const App = () => {
 
   const updateCurrentDate = (newCurrentDate: Date) => {
     setCurrentDate(newCurrentDate);
+  };
+
+  useEffect(() => {
+    getEvents();
+  });
+
+  const getEvents = async () => {
+    try {
+      const response = await fetch('/api/events');
+      const data  = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
   };
 
   // TODO: How will this be structured?
