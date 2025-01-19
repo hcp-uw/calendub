@@ -1,5 +1,9 @@
 import './Calendar.css';
 import { CalendarEvent } from 'components';
+import { useRef } from 'react';
+import { FaClock, FaHashtag, FaPlus } from 'react-icons/fa';
+import { FaLocationDot } from 'react-icons/fa6';
+import { GrTextAlignFull } from 'react-icons/gr';
 import { Event } from 'types/Event';
 
 interface CalendarProps {
@@ -86,7 +90,50 @@ const Calendar = (props: CalendarProps) => {
     return days;
   };
 
-  return <div className="calendar-grid card">{renderCalendarDays()}</div>;
+  const addEventRef = useRef(null);
+  return (
+    <div className="calendar">
+      <div className="calendar-bar">
+        <select>
+          <option>Month</option>
+        </select>
+        <button onClick={() => addEventRef.current.showModal()}>
+          <FaPlus size={8} />
+          Add event
+        </button>
+      </div>
+      <div className="calendar-grid card">{renderCalendarDays()}</div>
+      <dialog ref={addEventRef} className="card">
+        <div className="add-event-modal">
+          <h2>Add event</h2>
+          <input type="text" placeholder="Add title" />
+          <span>
+            <FaClock size={16} color="#282828" />
+            <input type="date" />
+            <input type="time" /> -
+            <input type="time" />
+          </span>
+          <span>
+            <FaLocationDot size={16} color="#282828" />
+            <input type="text" placeholder="Add location" />
+          </span>
+          <span>
+            <FaHashtag size={16} color="#282828" />
+            <select>
+              <option value="Test1">Test1</option>
+              <option value="Test2">Test2</option>
+              <option value="Test3">Test3</option>
+            </select>
+          </span>
+          <textarea placeholder="Add description"></textarea>
+          <span>
+            <button onClick={() => addEventRef.current.close()}>Cancel</button>
+            <button>Add</button>
+          </span>
+        </div>
+      </dialog>
+    </div>
+  );
 };
 
 export default Calendar;
