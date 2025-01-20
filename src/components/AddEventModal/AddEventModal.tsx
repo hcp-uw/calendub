@@ -30,22 +30,31 @@ const AddEventModal = (props: AddEventModalProps) => {
     type: '',
     description: '',
   });
+  const [errorMessage, setErrorMessage] = useState('');
 
   const events = props.events;
   const updateEvents = props.updateEvents;
   const addEventRef = props.addEventRef;
 
+  const closeModal = () => {
+    setErrorMessage('');
+    addEventRef.current?.close();
+  };
+
   const addEvent = (event: NewEvent) => {
     if (
-      event.title !== '' &&
-      event.date !== '' &&
-      event.startTime !== '' &&
-      event.endTime !== '' &&
-      event.location !== '' &&
-      event.description !== '' &&
-      event.type !== '' &&
-      event.startTime < event.endTime
+      event.title === '' ||
+      event.date === '' ||
+      event.startTime === '' ||
+      event.endTime === '' ||
+      event.location === '' ||
+      event.description === '' ||
+      event.type === ''
     ) {
+      setErrorMessage('All fields are required');
+    } else if (event.startTime >= event.endTime) {
+      setErrorMessage('Start time must be before end time');
+    } else {
       updateEvents([
         ...events,
         {
@@ -69,7 +78,7 @@ const AddEventModal = (props: AddEventModalProps) => {
         description: '',
       });
 
-      addEventRef.current?.close();
+      closeModal();
     }
   };
 
@@ -136,8 +145,9 @@ const AddEventModal = (props: AddEventModalProps) => {
             setNewEvent({ ...newEvent, description: e.target.value })
           }
         ></textarea>
+        <span className="error-message">{errorMessage}</span>
         <span>
-          <button onClick={() => addEventRef.current?.close()}>Cancel</button>
+          <button onClick={() => closeModal()}>Cancel</button>
           <button onClick={() => addEvent(newEvent)}>Add</button>
         </span>
       </div>

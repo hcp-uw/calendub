@@ -9,3 +9,8 @@
   display: flex;
   gap: 5px;
 }
+
+.error-message {
+  color: #d42222;
+  font-size: 0.75rem;
+}
