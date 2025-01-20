@@ -92,7 +92,9 @@ const AddEventModal = (props: AddEventModalProps) => {
           <input
             type="time"
             value={newEvent.startTime}
-            onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
+            onChange={(e) =>
+              setNewEvent({ ...newEvent, startTime: e.target.value })
+            }
           />
           -
           <input
