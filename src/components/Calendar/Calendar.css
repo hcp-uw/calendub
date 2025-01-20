@@ -94,4 +94,5 @@
 .calendar textarea {
   resize: none;
   height: 5rem;
+  white-space: pre-wrap;
 }
