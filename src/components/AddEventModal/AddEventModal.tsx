@@ -43,7 +43,8 @@ const AddEventModal = (props: AddEventModalProps) => {
       event.endTime !== '' &&
       event.location !== '' &&
       event.description !== '' &&
-      event.type !== ''
+      event.type !== '' &&
+      event.startTime < event.endTime
     ) {
       updateEvents([
         ...events,
