@@ -4,3 +4,4 @@ export { default as EventDetails } from 'components/EventDetails/EventDetails';
 export { default as PageHeader } from 'components/PageHeader/PageHeader';
 export { default as Header } from 'components/Header/Header';
 export { default as CalendarHeader } from 'components/CalendarHeader/CalendarHeader';
+export { default as AddEventModal } from 'components/AddEventModal/AddEventModal';
