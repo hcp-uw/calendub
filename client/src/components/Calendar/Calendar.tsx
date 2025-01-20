@@ -1,5 +1,7 @@
 import './Calendar.css';
-import { CalendarEvent } from 'components';
+import { CalendarEvent, AddEventModal } from 'components';
+import { useRef, useState } from 'react';
+import { FaPlus } from 'react-icons/fa';
 import { Event } from 'types/Event';
 
 interface CalendarProps {
@@ -19,8 +21,12 @@ const Calendar = (props: CalendarProps) => {
     '#ad9dd3',
   ];
   const eventColors: Record<string, string> = {};
-  const events = props.events;
+  const [events, setEvents] = useState(props.events);
   const currentDate = props.currentDate;
+
+  const updateEvents = (newEvents: Event[]) => {
+    setEvents(newEvents);
+  };
 
   // For an event type, it returns a unique color (repeats colors if needed)
   const getColorForEvent = (eventType: string) => {
@@ -86,7 +92,26 @@ const Calendar = (props: CalendarProps) => {
     return days;
   };
 
-  return <div className="calendar-grid card">{renderCalendarDays()}</div>;
+  const addEventRef = useRef<HTMLDialogElement>(null);
+  return (
+    <div className="calendar">
+      <div className="calendar-bar">
+        <select>
+          <option>Month</option>
+        </select>
+        <button onClick={() => addEventRef.current?.showModal()}>
+          <FaPlus size={8} />
+          Add event
+        </button>
+        <AddEventModal
+          addEventRef={addEventRef}
+          events={events}
+          updateEvents={updateEvents}
+        />
+      </div>
+      <div className="calendar-grid card">{renderCalendarDays()}</div>
+    </div>
+  );
 };
 
 export default Calendar;
