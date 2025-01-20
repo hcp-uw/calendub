@@ -10,56 +10,64 @@ interface AddEventModalProps {
   addEventRef: React.RefObject<HTMLDialogElement>;
 }
 
+interface NewEvent {
+  title: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  location: string;
+  type: string;
+  description: string;
+}
+
 const AddEventModal = (props: AddEventModalProps) => {
-  const [title, setTitle] = useState('');
-  const [date, setDate] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [location, setLocation] = useState('');
-  const [type, setType] = useState('');
-  const [description, setDescription] = useState('');
+  const [newEvent, setNewEvent] = useState({
+    title: '',
+    date: '',
+    startTime: '',
+    endTime: '',
+    location: '',
+    type: '',
+    description: '',
+  });
 
   const events = props.events;
   const updateEvents = props.updateEvents;
   const addEventRef = props.addEventRef;
 
-  const addEvent = (
-    title: string,
-    date: string,
-    startTime: string,
-    endTime: string,
-    location: string,
-    description: string,
-    type: string
-  ) => {
+  const addEvent = (event: NewEvent) => {
     if (
-      title !== '' &&
-      date !== '' &&
-      startTime !== '' &&
-      endTime !== '' &&
-      location !== '' &&
-      description !== '' &&
-      type !== ''
+      event.title !== '' &&
+      event.date !== '' &&
+      event.startTime !== '' &&
+      event.endTime !== '' &&
+      event.location !== '' &&
+      event.description !== '' &&
+      event.type !== ''
     ) {
       updateEvents([
         ...events,
         {
           id: events.length,
-          name: title,
-          date: date,
-          time: `${startTime}-${endTime}`,
-          location: location,
-          type: type,
-          description: description,
+          name: event.title,
+          date: event.date,
+          time: `${event.startTime}-${event.endTime}`,
+          location: event.location,
+          type: event.type,
+          description: event.description,
         },
       ]);
-      setTitle('');
-      setDate('');
-      setStartTime('');
-      setEndTime('');
-      setLocation('');
-      setType('');
-      setDescription('');
+
+      setNewEvent({
+        title: '',
+        date: '',
+        startTime: '',
+        endTime: '',
+        location: '',
+        type: '',
+        description: '',
+      });
+
       addEventRef.current?.close();
     }
   };
@@ -71,26 +79,28 @@ const AddEventModal = (props: AddEventModalProps) => {
         <input
           type="text"
           placeholder="Add title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={newEvent.title}
+          onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
         />
         <span>
           <FaClock size={16} color="#282828" />
           <input
             type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            value={newEvent.date}
+            onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
           />
           <input
             type="time"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
+            value={newEvent.startTime}
+            onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
           />
           -
           <input
             type="time"
-            value={endTime}
-            onChange={(e) => setEndTime(e.target.value)}
+            value={newEvent.endTime}
+            onChange={(e) =>
+              setNewEvent({ ...newEvent, endTime: e.target.value })
+            }
           />
         </span>
         <span>
@@ -98,13 +108,18 @@ const AddEventModal = (props: AddEventModalProps) => {
           <input
             type="text"
             placeholder="Add location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            value={newEvent.location}
+            onChange={(e) =>
+              setNewEvent({ ...newEvent, location: e.target.value })
+            }
           />
         </span>
         <span>
           <FaHashtag size={16} color="#282828" />
-          <select value={type} onChange={(e) => setType(e.target.value)}>
+          <select
+            value={newEvent.type}
+            onChange={(e) => setNewEvent({ ...newEvent, type: e.target.value })}
+          >
             <option value="" disabled></option>
             <option value="Test1">Test1</option>
             <option value="Test2">Test2</option>
@@ -113,26 +128,14 @@ const AddEventModal = (props: AddEventModalProps) => {
         </span>
         <textarea
           placeholder="Add description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={newEvent.description}
+          onChange={(e) =>
+            setNewEvent({ ...newEvent, description: e.target.value })
+          }
         ></textarea>
         <span>
           <button onClick={() => addEventRef.current?.close()}>Cancel</button>
-          <button
-            onClick={() =>
-              addEvent(
-                title,
-                date,
-                startTime,
-                endTime,
-                location,
-                description,
-                type
-              )
-            }
-          >
-            Add
-          </button>
+          <button onClick={() => addEvent(newEvent)}>Add</button>
         </span>
       </div>
     </dialog>
