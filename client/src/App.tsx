@@ -8,6 +8,10 @@ import {
 } from 'components';
 import { Event } from 'types/Event';
 import 'App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './components/HomePage/home-page.tsx';
+import LoginPage from './components/LoginPage/login.tsx';
+
 
 const App = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -116,7 +120,12 @@ const App = () => {
        * (PageHeader)    | (Calendar)
        * (EventDetails)  |
        */}
-      <div className="grid">
+      
+      <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/calendar" element={<div className="grid">
         <Header />
         <CalendarHeader
           currentDate={currentDate}
@@ -131,7 +140,9 @@ const App = () => {
           events={testEvents}
           currentDate={currentDate}
         />
-      </div>
+      </div>} />
+      </Routes>
+    </Router>
     </div>
   );
 };
