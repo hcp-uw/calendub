@@ -83,7 +83,7 @@ const AddEventModal = (props: AddEventModalProps) => {
   };
 
   return (
-    <dialog ref={addEventRef} className="card">
+    <dialog ref={addEventRef} className="card" >
       <div className="add-event-modal">
         <h2>Add event</h2>
         <input
