@@ -1,6 +1,7 @@
 import { ChangeEvent, FocusEvent, useRef, useState } from 'react';
 import './SearchBar.css';
 import { FaSearch } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const SearchBar = () => {
   const [searchValue, setSearchValue] = useState('');
@@ -39,6 +40,8 @@ const SearchBar = () => {
   };
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
+  const navigate = useNavigate();
+
   return (
     <div className="search-bar-container">
       <div className="search-bar">
@@ -50,7 +53,7 @@ const SearchBar = () => {
           onFocus={() => setShowSuggestions(true)}
           onBlur={handleOutsideClick}
         ></input>
-        <button>
+        <button onClick={() => navigate(`/profile/${searchValue}`)}>
           <FaSearch size={14} />
         </button>
       </div>

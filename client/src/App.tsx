@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { HomePage, LoginPage, ExplorePage } from 'routes';
+import { HomePage, LoginPage, ExplorePage, Profile } from 'routes';
 import 'App.css';
 
 const App = () => {
@@ -24,6 +24,7 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/explore" element={<ExplorePage />} />
+        <Route path="/profile/:username" element={<Profile />} />
       </Routes>
     </Router>
   );
