@@ -6,4 +6,5 @@ export type Event = {
   time: string;
   location: string;
   description: string;
+  author?: string;
 };

@@ -6,7 +6,13 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import '../ExplorePage/ExplorePage.css';
 import { Event } from 'types/Event';
-import { Header, Calendar, EventDetails, CalendarHeader } from 'components';
+import {
+  Header,
+  Calendar,
+  EventDetails,
+  CalendarHeader,
+  ProfileCard,
+} from 'components';
 
 const Profile = () => {
   const { username } = useParams();
@@ -90,6 +96,18 @@ const Profile = () => {
       author: 'uofwa',
     },
   ];
+  const testUsers = [
+    {
+      username: 'hcp.uw',
+      name: 'Husky Coding Project',
+      image: 'https://avatars.githubusercontent.com/u/87393150',
+      bio: 'Husky Coding Project is a student club that aims to provide students with practical, team-based programming experience by organizing large-scale coding projects.',
+      socials: {
+        instagram: 'hcp.uw',
+        url: 'https://hcp-uw.vercel.app/',
+      },
+    },
+  ];
 
   const [events, setEvents] = useState<Event[]>(testEvents);
   const [displayEvents, setDisplayEvents] = useState<Event[]>(events);
@@ -100,7 +118,7 @@ const Profile = () => {
   // e.g. (field: 'type', value: 'Club Meeting') => only show club meetings
   // e.g. (field: 'username', value: 'hcp.uw') => only show events by hcp.uw
   // e.g. (field: 'location', value: 'MOR 220') => only show events at MOR 220
-  const filterEvents = (field: keyof Event | 'author', value: string) => {
+  const filterEvents = (field: keyof Event, value: string) => {
     resetFilters();
     setDisplayEvents(events.filter((event) => event[field] === value));
   };
@@ -135,7 +153,6 @@ const Profile = () => {
   useEffect(() => {
     setSelectedEvent(null);
     filterEvents('author', username as string);
-    console.log(username);
   }, [username]);
 
   return (
@@ -147,9 +164,11 @@ const Profile = () => {
           updateCurrentDate={updateCurrentDate}
         />
         <div className="sidebar">
-          <div className="card">
-            <h1>{username}</h1>
-          </div>
+          <ProfileCard
+            userInformation={testUsers.find(
+              (user) => user.username === username
+            )}
+          />
           {selectedEvent && (
             <EventDetails
               selectedEvent={selectedEvent}
