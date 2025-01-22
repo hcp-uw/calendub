@@ -1,4 +1,5 @@
-import { FaChevronLeft, FaChevronRight, FaSearch } from 'react-icons/fa';
+import { SearchBar } from 'components';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import './CalendarHeader.css';
 
 interface CalendarHeaderProps {
@@ -30,6 +31,7 @@ const CalendarHeader = (props: CalendarHeaderProps) => {
       new Date(currentDate.getFullYear(), currentDate.getMonth() + increment, 1)
     );
   };
+
   return (
     <div className="calendar-header">
       <div className="calendar-nav">
@@ -44,12 +46,7 @@ const CalendarHeader = (props: CalendarHeaderProps) => {
         <h1>{monthNames[currentDate.getMonth()]}</h1>
         <h3>{currentDate.getFullYear()}</h3>
       </div>
-      <div className="search-bar">
-        <input placeholder="Search for username..."></input>
-        <button>
-          <FaSearch size={14} />
-        </button>
-      </div>
+      <SearchBar />
     </div>
   );
 };
