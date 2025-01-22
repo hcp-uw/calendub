@@ -8,6 +8,7 @@ interface AddEventModalProps {
   events: Event[];
   updateEvents: (events: Event[]) => void;
   addEventRef: React.RefObject<HTMLDialogElement>;
+  eventColors: Record<string, string>;
 }
 
 interface NewEvent {
@@ -33,6 +34,7 @@ const AddEventModal = (props: AddEventModalProps) => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const events = props.events;
+  const eventTypes = Object.keys(props.eventColors);
   const updateEvents = props.updateEvents;
   const addEventRef = props.addEventRef;
 
@@ -83,7 +85,7 @@ const AddEventModal = (props: AddEventModalProps) => {
   };
 
   return (
-    <dialog ref={addEventRef} className="card" >
+    <dialog ref={addEventRef} className="card">
       <div className="add-event-modal">
         <h2>Add event</h2>
         <input
@@ -133,9 +135,11 @@ const AddEventModal = (props: AddEventModalProps) => {
             onChange={(e) => setNewEvent({ ...newEvent, type: e.target.value })}
           >
             <option value="" disabled></option>
-            <option value="Test1">Test1</option>
-            <option value="Test2">Test2</option>
-            <option value="Test3">Test3</option>
+            {eventTypes.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
           </select>
         </span>
         <textarea
