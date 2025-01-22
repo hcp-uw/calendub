@@ -1,41 +1,26 @@
 import './Calendar.css';
 import { CalendarEvent, AddEventModal } from 'components';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { Event } from 'types/Event';
 
 interface CalendarProps {
   setSelectedEvent: (event: Event) => void;
   events: Event[];
+  displayEvents: Event[];
+  eventColors: Record<string, string>;
+  updateEvents: (events: Event[]) => void;
   currentDate: Date;
 }
 
 const Calendar = (props: CalendarProps) => {
   const weekDayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-  const colors = [
-    '#d39d9d',
-    '#d3b49d',
-    '#d2d39d',
-    '#9dd3ad',
-    '#9db4d3',
-    '#ad9dd3',
-  ];
-  const eventColors: Record<string, string> = {};
-  const [events, setEvents] = useState(props.events);
+
   const currentDate = props.currentDate;
-
-  const updateEvents = (newEvents: Event[]) => {
-    setEvents(newEvents);
-  };
-
-  // For an event type, it returns a unique color (repeats colors if needed)
-  const getColorForEvent = (eventType: string) => {
-    if (!eventColors[eventType]) {
-      eventColors[eventType] =
-        colors[Object.keys(eventColors).length % colors.length];
-    }
-    return eventColors[eventType];
-  };
+  const eventColors = props.eventColors;
+  const displayEvents = props.displayEvents;
+  const events = props.events;
+  const updateEvents = props.updateEvents;
 
   // Get the number of days in a month
   const getDaysInMonth = (date: Date) => {
@@ -72,7 +57,7 @@ const Calendar = (props: CalendarProps) => {
         day
       );
       const dateStr = date.toISOString().split('T')[0];
-      const dayEvents = events.filter((event) => event.date === dateStr);
+      const dayEvents = displayEvents.filter((event) => event.date === dateStr);
 
       days.push(
         <div key={'day' + day} className="calendar-cell">
@@ -81,7 +66,7 @@ const Calendar = (props: CalendarProps) => {
             <CalendarEvent
               key={event.id}
               name={event.name}
-              color={getColorForEvent(event.type)}
+              color={eventColors[event.type]}
               onClick={() => props.setSelectedEvent(event)}
             />
           ))}
@@ -107,6 +92,7 @@ const Calendar = (props: CalendarProps) => {
           addEventRef={addEventRef}
           events={events}
           updateEvents={updateEvents}
+          eventColors={eventColors}
         />
       </div>
       <div className="calendar-grid card">{renderCalendarDays()}</div>

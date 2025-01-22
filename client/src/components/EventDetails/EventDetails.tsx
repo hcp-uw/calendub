@@ -3,9 +3,13 @@ import { Event } from 'types/Event';
 
 interface EventDetailsProps {
   selectedEvent: Event;
+  eventColors: Record<string, string>;
 }
 
 const EventDetails = (props: EventDetailsProps) => {
+  // You can use eventColors to get the color corresponding to the event type
+  // e.g. eventColors[props.selectedEvent.type]
+
   return (
     <div className="event-details card">
       <h2>{props.selectedEvent.name}</h2>
