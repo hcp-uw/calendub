@@ -2,7 +2,7 @@
 // Perhaps merge this into one big CalendarPage that can be used for both ExplorePage and ProfilePage???
 // It shares a lot of similarities...
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, createContext } from 'react';
 import { useParams } from 'react-router-dom';
 import '../ExplorePage/ExplorePage.css';
 import { Event } from 'types/Event';
@@ -13,6 +13,8 @@ import {
   CalendarHeader,
   ProfileCard,
 } from 'components';
+
+export const userInformationContext = createContext<string[]>([]);
 
 const Profile = () => {
   const { username } = useParams();
@@ -107,7 +109,19 @@ const Profile = () => {
         url: 'https://hcp-uw.vercel.app/',
       },
     },
+    {
+      username: 'uofwa',
+      name: 'University of Washington',
+      image:
+        'https://img.ctykit.com/cdn/wa-bellevue/images/tr:w-900/8_16_17_member_university_of_washington.png',
+      bio: 'Do you dare to Be Boundless? At the UW, you can. Share your view of the UW with #YouW.',
+      socials: {
+        instagram: 'uofwa',
+        url: 'https://linktr.ee/uofwa',
+      },
+    },
   ];
+  const userList = testUsers.map((user) => user.username);
 
   const [events, setEvents] = useState<Event[]>(testEvents);
   const [displayEvents, setDisplayEvents] = useState<Event[]>(events);
@@ -155,37 +169,43 @@ const Profile = () => {
     filterEvents('author', username as string);
   }, [username]);
 
+  if (!userList.includes(username as string)) {
+    return <div>404: username not found</div>;
+  }
+
   return (
-    <div className="explore-page">
-      <div className="grid">
-        <Header />
-        <CalendarHeader
-          currentDate={currentDate}
-          updateCurrentDate={updateCurrentDate}
-        />
-        <div className="sidebar">
-          <ProfileCard
-            userInformation={testUsers.find(
-              (user) => user.username === username
-            )}
+    <userInformationContext.Provider value={userList}>
+      <div className="explore-page">
+        <div className="grid">
+          <Header />
+          <CalendarHeader
+            currentDate={currentDate}
+            updateCurrentDate={updateCurrentDate}
           />
-          {selectedEvent && (
-            <EventDetails
-              selectedEvent={selectedEvent}
-              eventColors={eventColors}
+          <div className="sidebar">
+            <ProfileCard
+              userInformation={testUsers.find(
+                (user) => user.username === username
+              )}
             />
-          )}
+            {selectedEvent && (
+              <EventDetails
+                selectedEvent={selectedEvent}
+                eventColors={eventColors}
+              />
+            )}
+          </div>
+          <Calendar
+            setSelectedEvent={setSelectedEvent}
+            events={events}
+            updateEvents={updateEvents}
+            displayEvents={displayEvents}
+            eventColors={eventColors}
+            currentDate={currentDate}
+          />
         </div>
-        <Calendar
-          setSelectedEvent={setSelectedEvent}
-          events={events}
-          updateEvents={updateEvents}
-          displayEvents={displayEvents}
-          eventColors={eventColors}
-          currentDate={currentDate}
-        />
       </div>
-    </div>
+    </userInformationContext.Provider>
   );
 };
 

@@ -1,5 +1,13 @@
-import { ChangeEvent, FocusEvent, useEffect, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  FocusEvent,
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+} from 'react';
 import './SearchBar.css';
+import { userInformationContext } from 'routes/Profile/Profile';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,16 +17,7 @@ const SearchBar = () => {
   const [activeIndex, setActiveIndex] = useState(-1);
 
   // Hardcoded values for now
-  const usernames = [
-    'hcp.uw',
-    'uofwa',
-    'user',
-    'johndoe',
-    'janedoe',
-    'testuser',
-    'joeschmoe',
-    'janesmith',
-  ];
+  const usernames = useContext(userInformationContext);
 
   const filteredSuggestions = usernames.filter((item) =>
     item.toLowerCase().includes(searchValue.toLowerCase())
