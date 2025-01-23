@@ -24,6 +24,10 @@
   background-color: #eeeeee;
 }
 
+.search-bar-container .suggestion-item.active {
+  background-color: #eeeeee;
+}
+
 .search-bar-container .search-bar {
   background-color: #f8f8f8;
   border-style: none;
