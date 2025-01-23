@@ -23,13 +23,13 @@
   gap: 0.75rem;
 }
 
-.profile-card .profile-name h2,
-p {
+.profile-card .profile-name h2 {
   margin: 0;
 }
 
 .profile-card .profile-name p {
   color: #353535;
+  margin: 0;
 }
 
 .profile-card button {
