@@ -32,18 +32,22 @@ describe('Event API', () => {
 
   test('POST /api/events should create a new event', async () => {
     const newEvent = {
-      title: 'Writing this test',
-      startTime: new Date(2025, 0, 19, 12, 58),
-      endTime: new Date(2025, 0, 19, 12, 59)
+      id: 0,
+      name: 'General Meeting',
+      date: '2025-01-14',
+      time: '6:00-7:30pm',
+      location: 'MOR 220',
+      description: 'Lorem ipsum dolor sit amet.',
+      type: 'Club Meeting',
     };
 
     const res = await request(app).post('/api/events').send(newEvent);
     expect(res.statusCode).toBe(201);
-    expect(res.body.title).toBe(newEvent.title);
+    expect(res.body.name).toBe(newEvent.name);
 
     const getRes = await request(app).get('/api/events');
     expect(getRes.body.length).toBe(1);
-    expect(getRes.body[0].title).toBe(newEvent.title);
+    expect(getRes.body[0].name).toBe(newEvent.name);
   });
 
   test('POST /api/events should validate required fields', async () => {

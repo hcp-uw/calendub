@@ -12,9 +12,9 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { title, startTime, endTime } = req.body;
+  const { id, name, type, date, time, location, description } = req.body;
   try {
-    const newEvent = new Event({ title, startTime, endTime });
+    const newEvent = new Event({ id, name, type, time, date, location, description });
     await newEvent.save();
     res.status(201).json(newEvent);
   } catch (error) {

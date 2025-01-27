@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Header,
   Calendar,
@@ -13,80 +13,45 @@ const ExplorePage = () => {
   // TODO: How will this be structured?
   // Test events => feel free to change the values for testing
   // date and time field NOT FINAL => need to account for timezones (unless it's worked out in the backend)
-  const testEvents = [
-    {
-      id: 0,
-      name: 'General Meeting',
-      date: '2025-01-14',
-      time: '6:00-7:30pm',
-      location: 'MOR 220',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc.',
-      type: 'Club Meeting',
-    },
-    {
-      id: 1,
-      name: 'General Meeting',
-      date: '2025-01-21',
-      time: '6:00-7:30pm',
-      location: 'MOR 220',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc.',
-      type: 'Club Meeting',
-    },
-    {
-      id: 2,
-      name: 'Another Event',
-      date: '2025-01-14',
-      time: '8:00-9:30am',
-      location: 'Somewhere',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc.',
-      type: 'Some type',
-    },
-    {
-      id: 3,
-      name: 'Event but with a Long Name',
-      date: '2025-01-17',
-      time: '1:00-2:30pm',
-      location: 'The Quad',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc.',
-      type: 'Another type',
-    },
-    {
-      id: 4,
-      name: 'Some other event',
-      date: '2025-01-23',
-      time: '6:30-8:00pm',
-      location: 'Somehwhere',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc.',
-      type: 'Some other type',
-    },
-    {
-      id: 5,
-      name: 'UW v Purdue',
-      date: '2025-01-15',
-      time: '6:30pm',
-      location: 'Hec Edmundson Pavilion',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc.',
-      type: 'Sports Match',
-    },
-    {
-      id: 6,
-      name: 'UW event',
-      date: '2025-01-23',
-      time: '4:30-5:00pm',
-      location: 'Red Square',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc nec justo ultricies aliquam. Nullam nec fermentum nunc. Sed nec nunc.',
-      type: 'UW Event',
-    },
-  ];
+  
+  useEffect(() => {
+    getEvents();
+  }, []);
 
-  const [events, setEvents] = useState<Event[]>(testEvents); // actual events kept in state
+  const validateEvents = (data: any): data is Event[] => {
+    return (
+      Array.isArray(data) &&
+      data.every(
+        (event) =>
+          typeof event.id === 'number' &&
+          typeof event.name === 'string' &&
+          typeof event.date === 'string' &&
+          typeof event.date === 'string' &&
+          typeof event.location === 'string' &&
+          typeof event.description === 'string' &&
+          typeof event.type === 'string'
+      )
+    );
+  };
+
+  const getEvents = async () => {
+    try {
+      const response = await fetch('/api/events');
+      const data = await response.json();
+      if (validateEvents(data)) {
+        updateEvents(data);
+        return data;
+      } else {
+        console.error('Invalid data received:', data);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      return [];
+    }
+  };
+
+  const [events, setEvents] = useState<Event[]>([]); // actual events kept in state
   const [displayEvents, setDisplayEvents] = useState<Event[]>(events); // what events are displayed on the calendar (this is to allow filtering without losing the original events)
   const [currentDate, setCurrentDate] = useState(new Date()); // the current date being viewed on the calendar (used for month navigation)
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null); // the current event selected by the user
