@@ -57,17 +57,22 @@ const AddEventModal = (props: AddEventModalProps) => {
     } else if (event.startTime >= event.endTime) {
       setErrorMessage('Start time must be before end time');
     } else {
+      const newEventFields : Event = {
+        id: events.length,
+        name: event.title,
+        date: event.date,
+        time: `${event.startTime}-${event.endTime}`,
+        location: event.location,
+        type: event.type,
+        description: event.description,
+      };
+
+      // add fetch request to post this to database
+      postEventData(newEventFields);
+
       updateEvents([
         ...events,
-        {
-          id: events.length,
-          name: event.title,
-          date: event.date,
-          time: `${event.startTime}-${event.endTime}`,
-          location: event.location,
-          type: event.type,
-          description: event.description,
-        },
+        newEventFields
       ]);
 
       setNewEvent({
@@ -82,6 +87,24 @@ const AddEventModal = (props: AddEventModalProps) => {
 
       closeModal();
     }
+  };
+
+  const postEventData = (event: Event) => {
+    fetch('/api/events', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(event),
+    }).then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to post event data');
+      } else {
+        console.log(event);
+      }
+    }).catch((error) => {
+      console.error('Error posting event data:', error);
+    });
   };
 
   return (
