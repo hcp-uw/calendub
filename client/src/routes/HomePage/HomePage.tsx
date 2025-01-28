@@ -1,5 +1,6 @@
 import './HomePage.css';
 import logo from 'assets/logo.png';
+import LoginButton from '../../components/LoginButton/LoginButton';
 
 const HomePage: React.FC = () => {
   // Button handlers
@@ -25,9 +26,7 @@ const HomePage: React.FC = () => {
           </p>
         </div>
         <div className="options">
-          <button className="button" onClick={handleLogin}>
-            Login
-          </button>
+          <LoginButton />
           <button className="button" onClick={handleViewCalendar}>
             View Calendar
           </button>

@@ -8,15 +8,20 @@ import {
 } from 'components';
 import { Event } from 'types/Event';
 import './ExplorePage.css';
+import { useAuth } from 'context/AuthContext.tsx';
 
 const ExplorePage = () => {
   // TODO: How will this be structured?
   // Test events => feel free to change the values for testing
   // date and time field NOT FINAL => need to account for timezones (unless it's worked out in the backend)
-  
+  const { currentUser, loading } = useAuth();
+
   useEffect(() => {
-    getEvents();
-  }, []);
+    if (!loading) {
+      console.log("Current User:", currentUser);
+      getEvents();
+    }
+  }, [loading, currentUser]);
 
   const validateEvents = (data: any): data is Event[] => {
     return (
