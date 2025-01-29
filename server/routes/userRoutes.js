@@ -5,7 +5,6 @@ const router = express.Router();
 
 router.post('/', verifyToken, async (req, res) => {
   const { uid, email } = req.user;
-  console.log(uid, email);
   try {
     let user = await User.findOne({ uid });
     if (!user) {
