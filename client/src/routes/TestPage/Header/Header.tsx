@@ -5,7 +5,7 @@ import { useState } from 'react';
 import defaultprofile from 'assets/default-profile.jpg';
 const Header = () => {
     const navigate = useNavigate();
-    const [loggedIn, setLoggedIn] = useState(true);
+    const [loggedIn, setLoggedIn] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
 
     return (
