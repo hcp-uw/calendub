@@ -1,12 +1,39 @@
 import './Header.css';
 import logo from 'assets/logo.png';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import defaultprofile from 'assets/default-profile.jpg';
+import { useAuth } from 'context/AuthContext.tsx';
+import { auth } from "../../firebase/firebase.ts";
+import { signOut } from 'firebase/auth';
+
 const Header = () => {
     const navigate = useNavigate();
     const [loggedIn, setLoggedIn] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
+    const { currentUser, loading } = useAuth();
+
+    useEffect(() => {
+        if (!loading) {
+            console.log("Current User:", currentUser);
+            if (currentUser) {
+                setLoggedIn(true);
+            } else {
+                setLoggedIn(false);
+            }
+        }
+    }, [loading, currentUser]);
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
+            setLoggedIn(false);
+            setShowDropdown(false);
+            navigate('/');
+        } catch (error) {
+            console.error('Error during logout:', error);
+        }
+    };
 
     return (
         <div className='header'>
@@ -21,7 +48,7 @@ const Header = () => {
                         {showDropdown && (
                             <div className='dropdown-menu'>
                                 <div>Profile</div>
-                                <div>Log Out</div>
+                                <div onClick={handleLogout}>Log Out</div>
                             </div>
                         )}
                     </div>

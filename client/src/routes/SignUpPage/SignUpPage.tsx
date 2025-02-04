@@ -1,15 +1,68 @@
 import './SignUpPage.css';
 import logo from 'assets/logo.png';
 import sideImage from 'assets/signup-image.webp';
-import googleLogo from 'assets/google-logo.png';
-import uwLogo from 'assets/uw-logo.webp';
 import passwordEyeShow from 'assets/password-eye-show.png';
 import passwordEyeHide from 'assets/password-eye-hide.png';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import GoogleLoginButton from 'components/GoogleLoginButton/GoogleLoginButton';
+import { auth } from "../../firebase/firebase.ts";
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpPage: React.FC = () => {
+    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSignUp = async (e: React.FormEvent) => {
+        e.preventDefault();
+        console.log('Submitted:', { name, email, password });
+
+        if (!name || !email || !password) {
+            alert('Please fill out all fields');
+            return;
+        }
+
+        if (password.length < 6) {
+            alert('Password must be at least 6 characters');
+            return;
+        }
+        
+        try {
+            const result = await createUserWithEmailAndPassword(auth, email, password);
+            const user = result.user;
+            const token = await user.getIdToken();
+            console.log(token);
+
+            fetch('/api/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ token }),
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    return response.text().then((text) => {
+                        throw new Error(text || `Server responded with status: ${response.status}`);
+                    });
+                }
+            })
+            .then((data) => {
+                console.log('Success - user logged in:', data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+            navigate('/explore');
+        } catch(error) {
+            console.error(error);
+        }
+    }
 
     return (
         <div className='signup-component'>
@@ -23,11 +76,7 @@ const SignUpPage: React.FC = () => {
                         <span className='form-title'>Get Started With Us</span>
                         <span className='form-subtitle'>Please enter your details</span>
                     </div>
-                    <button className='google-uw-button'>
-                        <img src={googleLogo} alt="Google" className='google-icon' />
-                        <div className='google-uw-button-text'>Continue with Google/UW Net ID</div>
-                        <img src={uwLogo} alt="UW" className='uw-icon' />
-                    </button>
+                    <GoogleLoginButton />
                     <div className='or-separator'>
                         <hr />
                         or
@@ -36,20 +85,20 @@ const SignUpPage: React.FC = () => {
                     <div className="signup-form-container">
                         <div className="signup-form-field">
                             <span>Name</span>
-                            <input type="text" />
+                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
                         </div>
                         <div className="signup-form-field">
                             <span>Email address</span>
-                            <input type="text" />
+                            <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
                         </div>
                         <div className="signup-form-field">
                             <span>Password</span>
-                            <input type={showPassword? 'text' : 'password'} />
+                            <input type={showPassword? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} />
                             <div className="show-password" onClick={() => setShowPassword(!showPassword)}>
                                 <img src={showPassword? passwordEyeHide : passwordEyeShow}></img>
                             </div>
                         </div>
-                        <button>Sign Up</button>
+                        <button onClick={handleSignUp}>Sign Up</button>
                     </div>
                     <span>Already have an account? <a href="/test/login">Log In</a></span>
                 </div>

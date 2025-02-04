@@ -1,8 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../firebase/firebase.ts";
+import googleLogo from 'assets/google-logo.png';
+import uwLogo from 'assets/uw-logo.webp';
+import './GoogleLoginButton.css';
 
-const LoginButton: React.FC = () => {
+const GoogleLoginButton: React.FC = () => {
+  const navigate = useNavigate();
+
   const handleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
@@ -19,6 +25,7 @@ const LoginButton: React.FC = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log('Success - user logged in:', data);
+        navigate('/explore');
       })
       .catch((error) => {
         console.error(error);
@@ -30,8 +37,12 @@ const LoginButton: React.FC = () => {
   }
 
   return (
-    <button onClick={handleLogin}>Login</button>
+    <button className='google-uw-button' onClick={handleLogin}>
+      <img src={googleLogo} alt="Google" className='google-icon' />
+      <div className='google-uw-button-text'>Continue with Google/UW Net ID</div>
+      <img src={uwLogo} alt="UW" className='uw-icon' />
+    </button>
   );
 };
 
-export default LoginButton;
+export default GoogleLoginButton;

@@ -1,13 +1,11 @@
 import './HomePage.css';
 import logo from 'assets/logo.png';
-import LoginButton from '../../components/LoginButton/LoginButton';
 import Header from '../../components/Header/Header';
 
 const HomePage: React.FC = () => {
-  // Button handlers
 
   const handleViewCalendar = () => {
-    window.location.href = '/explore'; // Replace with actual calendar URL
+    window.location.href = '/explore';
   };
 
   return (
@@ -26,7 +24,6 @@ const HomePage: React.FC = () => {
             </p>
           </div>
           <div className="options">
-            <LoginButton />
             <button className="button" onClick={handleViewCalendar}>
               View Calendar
             </button>
