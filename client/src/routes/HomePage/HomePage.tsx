@@ -4,6 +4,10 @@ import LoginButton from '../../components/LoginButton/LoginButton';
 
 const HomePage: React.FC = () => {
   // Button handlers
+  const handleTest = () => {
+    window.location.href = '/test'; // Replace with actual test URL
+  }
+
   const handleLogin = () => {
     window.location.href = '/login'; // Replace with actual login URL
   };
@@ -27,6 +31,7 @@ const HomePage: React.FC = () => {
         </div>
         <div className="options">
           <LoginButton />
+          <button onClick={handleTest}>test</button>
           <button className="button" onClick={handleViewCalendar}>
             View Calendar
           </button>
