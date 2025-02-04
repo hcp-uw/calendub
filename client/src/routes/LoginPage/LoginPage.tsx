@@ -78,7 +78,7 @@ const LoginPage: React.FC = () => {
                         </div>
                         <button onClick={handleLogIn}>Log In</button>
                     </div>
-                    <span>Don't have an account? <a href="/test/signup">Sign Up</a></span>
+                    <span>Don't have an account? <a href="/signup">Sign Up</a></span>
                 </div>
             </div>
             <div className='login-component-image'>

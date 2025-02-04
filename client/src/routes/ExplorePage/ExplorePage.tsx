@@ -5,6 +5,7 @@ import {
   EventDetails,
   PageHeader,
   CalendarHeader,
+  Header
 } from 'components';
 import { Event } from 'types/Event';
 import './ExplorePage.css';
@@ -98,34 +99,36 @@ const ExplorePage = () => {
   };
 
   return (
-    <div className="explore-page">
-      <div className="grid">
-        <HeaderTitle />
-        <CalendarHeader
-          currentDate={currentDate}
-          updateCurrentDate={updateCurrentDate}
-        />
-        <div className="sidebar">
-          <PageHeader
-            filterEvents={filterEvents}
-            resetFilters={resetFilters}
-            eventColors={eventColors}
+    <div>
+      <div className="explore-page">
+        <div className="grid">
+          <HeaderTitle />
+          <CalendarHeader
+            currentDate={currentDate}
+            updateCurrentDate={updateCurrentDate}
           />
-          {selectedEvent && (
-            <EventDetails
-              selectedEvent={selectedEvent}
+          <div className="sidebar">
+            <PageHeader
+              filterEvents={filterEvents}
+              resetFilters={resetFilters}
               eventColors={eventColors}
             />
-          )}
+            {selectedEvent && (
+              <EventDetails
+                selectedEvent={selectedEvent}
+                eventColors={eventColors}
+              />
+            )}
+          </div>
+          <Calendar
+            setSelectedEvent={setSelectedEvent}
+            events={events}
+            updateEvents={updateEvents}
+            displayEvents={displayEvents}
+            eventColors={eventColors}
+            currentDate={currentDate}
+          />
         </div>
-        <Calendar
-          setSelectedEvent={setSelectedEvent}
-          events={events}
-          updateEvents={updateEvents}
-          displayEvents={displayEvents}
-          eventColors={eventColors}
-          currentDate={currentDate}
-        />
       </div>
     </div>
   );

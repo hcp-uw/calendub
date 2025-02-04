@@ -47,7 +47,7 @@ const Header = () => {
                         <img src={defaultprofile} alt='defaultprofile' className='default-profile-image' />
                         {showDropdown && (
                             <div className='dropdown-menu'>
-                                <div>Profile</div>
+                                <div onClick={() => navigate('/profile')}>Profile</div>
                                 <div onClick={handleLogout}>Log Out</div>
                             </div>
                         )}

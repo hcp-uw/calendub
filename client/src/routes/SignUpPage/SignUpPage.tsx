@@ -100,7 +100,7 @@ const SignUpPage: React.FC = () => {
                         </div>
                         <button onClick={handleSignUp}>Sign Up</button>
                     </div>
-                    <span>Already have an account? <a href="/test/login">Log In</a></span>
+                    <span>Already have an account? <a href="/login">Log In</a></span>
                 </div>
             </div>
             <div className='signup-component-image'>
