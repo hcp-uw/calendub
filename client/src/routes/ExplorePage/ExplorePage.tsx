@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import {
-  Header,
+  HeaderTitle,
   Calendar,
   EventDetails,
   PageHeader,
@@ -100,7 +100,7 @@ const ExplorePage = () => {
   return (
     <div className="explore-page">
       <div className="grid">
-        <Header />
+        <HeaderTitle />
         <CalendarHeader
           currentDate={currentDate}
           updateCurrentDate={updateCurrentDate}
