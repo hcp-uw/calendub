@@ -104,3 +104,45 @@
 .dropdown-menu button:hover {
   background-color: #f6f6f6;
 }
+
+.header-profile-view {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.profile-dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px; 
+  cursor: pointer;
+}
+
+.caret-icon {
+  font-size: 12px;
+  transition: transform 0.3s ease; 
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 125%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  z-index: 100;
+}
+
+.dropdown-menu div {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-menu div:hover {
+  background-color: #f0f0f0;
+}

@@ -15,13 +15,19 @@ const LoginPage: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+
 
     const handleLogIn = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError('');
+        setLoading(true);
         console.log('Submitted:', { email, password });
 
         if (!email || !password) {
-            alert('Please fill out all fields');
+            setError('Please fill out all fields.');
+            setLoading(false);
             return;
         }
 
@@ -41,8 +47,24 @@ const LoginPage: React.FC = () => {
             });
 
             navigate('/explore');
-        } catch (error) {
+        } catch (error : any) {
             console.error(error);
+            
+            switch (error.code) {
+                case 'auth/invalid-email':
+                    setError('Invalid email address. Please enter a valid email.');
+                    break;
+                case 'auth/invalid-credential':
+                    setError('No account found with this email and password.');
+                    break;
+                case 'auth/too-many-requests':
+                    setError('Too many failed attempts. Please try again later.');
+                    break;
+                default:
+                    setError('An unexpected error occurred. Please try again.');
+            }
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -76,8 +98,9 @@ const LoginPage: React.FC = () => {
                                 <img src={showPassword? passwordEyeHide : passwordEyeShow}></img>
                             </div>
                         </div>
-                        <button onClick={handleLogIn}>Log In</button>
+                        <button onClick={handleLogIn} disabled={loading}> {loading? 'Logging In...' : 'Log In'} </button>
                     </div>
+                    { error && <div className='error-message'>{error}</div>}
                     <span>Don't have an account? <a href="/signup">Sign Up</a></span>
                 </div>
             </div>

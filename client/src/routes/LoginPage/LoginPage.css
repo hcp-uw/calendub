@@ -155,11 +155,20 @@
     padding: 0.6rem;
     border: none;
     border-radius: 4px;
-    margin: 0.7rem 0 1.5rem 0;
+    margin: 0.7rem 0 1rem 0;
     font-size: 1rem;
     background-color: #CBC3E3;
     color: #333;
     cursor: pointer;
+}
+
+.error-message {
+    color: #ff0000;
+    font-size: 0.8rem;
+    margin: 0 0 0.5rem 0;
+    padding: 0.5rem;
+    border: #ff0000 1px solid;
+    border-radius: 10px;
 }
 
 .login-form-container button:hover {

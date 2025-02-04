@@ -9,6 +9,7 @@ import GoogleLoginButton from 'components/GoogleLoginButton/GoogleLoginButton';
 import { auth } from "../../firebase/firebase.ts";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { set } from 'firebase/database';
 
 const SignUpPage: React.FC = () => {
     const navigate = useNavigate();
@@ -16,26 +17,24 @@ const SignUpPage: React.FC = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Submitted:', { name, email, password });
+        setError('');
+        setLoading(true);
 
         if (!name || !email || !password) {
-            alert('Please fill out all fields');
+            setError('Please fill out all fields');
+            setLoading(false);
             return;
         }
-
-        if (password.length < 6) {
-            alert('Password must be at least 6 characters');
-            return;
-        }
-        
+ 
         try {
             const result = await createUserWithEmailAndPassword(auth, email, password);
             const user = result.user;
             const token = await user.getIdToken();
-            console.log(token);
 
             fetch('/api/users', {
                 method: 'POST',
@@ -43,24 +42,27 @@ const SignUpPage: React.FC = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ token }),
-            })
-            .then((response) => {
-                if (!response.ok) {
-                    return response.text().then((text) => {
-                        throw new Error(text || `Server responded with status: ${response.status}`);
-                    });
-                }
-            })
-            .then((data) => {
-                console.log('Success - user logged in:', data);
-            })
-            .catch((error) => {
-                console.error(error);
             });
 
             navigate('/explore');
-        } catch(error) {
+        } catch(error : any) {
             console.error(error);
+
+            switch (error.code) {
+                case 'auth/auth/email-already-exists':
+                    setError('This email is already in use. Please try logging in.');
+                    break;
+                case 'auth/invalid-email':
+                    setError('Invalid email address. Please enter a valid email.');
+                    break;
+                case 'auth/weak-password':
+                    setError('Password must be at least 6 characters.');
+                    break;
+                default:
+                    setError('An unexpected error occurred. Please try again.');
+            }
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -98,8 +100,9 @@ const SignUpPage: React.FC = () => {
                                 <img src={showPassword? passwordEyeHide : passwordEyeShow}></img>
                             </div>
                         </div>
-                        <button onClick={handleSignUp}>Sign Up</button>
+                        <button onClick={handleSignUp}> {loading? 'Signing Up...' : 'Sign Up'} </button>
                     </div>
+                    { error && <div className='signup-error-message'>{error}</div>}
                     <span>Already have an account? <a href="/login">Log In</a></span>
                 </div>
             </div>
