@@ -5,10 +5,90 @@
   padding-top: 10px;
 }
 
+/* Button container for Event Type buttons */
+.button-container {
+  display: flex;          /* Ensures buttons appear side by side */
+  flex-wrap: wrap;        /* Wraps buttons to the next line if they don't fit */
+  gap: 7px;               /* Adds space between buttons */
+  margin-top: 10px;
+}
+
+/* Button styling for Event Type Buttons */
+.button-container button {
+  background-color: #04AA6D; /* Green (Event Type) */
+  border: none;
+  color: white;
+  padding: 10px 15px;    /* Adjusted padding */
+  text-align: center;
+  font-size: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  min-width: 100px;      /* Set a minimum width to prevent shrinking */
+  transition: background-color 0.3s ease; /* Smooth hover transition */
+}
+
+.button-container button:hover {
+  background-color: #038c5a; /* Darker green on hover (Event Type) */
+}
+
+/* Button container for Location Buttons */
+.location-button {
+  display: flex;          /* Ensures buttons appear side by side */
+  flex-wrap: wrap;        /* Wraps buttons to the next line if they don't fit */
+  gap: 7px;               /* Adds space between buttons */
+  margin-top: 10px;
+}
+
+/* Button styling for Location Buttons */
+.location-button button {
+  background-color: #aa0404; /* Red (Location) */
+  border: none;
+  color: white;
+  padding: 10px 15px;    /* Adjusted padding */
+  text-align: center;
+  font-size: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  min-width: 100px;      /* Set a minimum width to prevent shrinking */
+  transition: background-color 0.3s ease; /* Smooth hover transition */
+}
+
+.location-button button:hover {
+  background-color: #8a0303; /* Darker red on hover (Location) */
+}
+
+/* Button container for Club Buttons */
+.affiliation-button {
+  display: flex;          /* Ensures buttons appear side by side */
+  flex-wrap: wrap;        /* Wraps buttons to the next line if they don't fit */
+  gap: 7px;               /* Adds space between buttons */
+  margin-top: 10px;
+}
+
+/* Button styling for Club Buttons */
+.affiliation-button button {
+  background-color: #4f04aa; /* Purple (Club) */
+  border: none;
+  color: white;
+  padding: 10px 15px;    /* Adjusted padding */
+  text-align: center;
+  font-size: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  min-width: 100px;      /* Set a minimum width to prevent shrinking */
+  transition: background-color 0.3s ease; /* Smooth hover transition */
+}
+
+.affiliation-button button:hover {
+  background-color: #6804aa; /* Darker purple on hover (Club) */
+}
+
+/* General Styling for Block Elements */
 .block {
   padding-top: 32px;
 }
 
+/* Styling for Filter Button (e.g., reset or apply filters) */
 .filter {
   border: none;
   border-radius: 12px;
@@ -20,6 +100,15 @@
   cursor: pointer;
 }
 
+/* Divider Styling */
 .divide {
   width: 5px;
+}
+
+/* Container for Tag Selection */
+
+.choose_tag {
+  width: 20rem;
+  padding: .5rem;
+  padding-top: 10px;
 }
