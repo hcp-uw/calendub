@@ -5,12 +5,19 @@ import { useState, useEffect } from 'react';
 import { useAuth } from 'context/AuthContext.tsx';
 import { auth } from "../../firebase/firebase.ts";
 import { signOut } from 'firebase/auth';
+import AddEventModal from 'components/AddEventModal/AddEventModal';
 
-const Header = () => {
+interface HeaderProps {
+    removeScroll: () => void;
+    enableScroll: () => void;
+}
+
+const Header : React.FC<HeaderProps> = ( {removeScroll, enableScroll} ) => {
     const navigate = useNavigate();
     const [loggedIn, setLoggedIn] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const { currentUser, loading } = useAuth();
+    const [isModalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         if (!loading) {
@@ -30,6 +37,17 @@ const Header = () => {
         }
     };
 
+    const configureModal = () => {
+        setModalOpen(true);
+        setShowDropdown(false);
+        removeScroll();
+    }
+
+    const onCloseModal = () => {
+        setModalOpen(false);
+        enableScroll();
+    }
+
     return (
         <div className='header'>
             <Link to='/' className='header-branding'>
@@ -48,10 +66,15 @@ const Header = () => {
 
                     {showDropdown && (
                         <div className='dropdown-menu'>
-                            <div>Add Event</div>
+                            { currentUser?.email?.endsWith('@uw.edu') && <div onClick={() => configureModal()}>Add Event</div> } 
                             <div onClick={handleLogout}>Log Out</div>
                         </div>
                     )}
+
+                    <AddEventModal 
+                        isOpen={isModalOpen} 
+                        onClose={() => onCloseModal()} 
+                    />
                 </div>
             ) : (
                 <div className='header-cta'>

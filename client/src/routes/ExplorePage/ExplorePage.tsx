@@ -4,8 +4,7 @@ import {
   Calendar,
   EventDetails,
   PageHeader,
-  CalendarHeader,
-  Header
+  CalendarHeader
 } from 'components';
 import { Event } from 'types/Event';
 import './ExplorePage.css';
