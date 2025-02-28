@@ -13,3 +13,9 @@
 .label:hover {
   cursor: pointer;
 }
+
+.popup {
+  position: absolute;
+  transform: translate(-50%, 0%);
+  padding: 1rem;
+}
