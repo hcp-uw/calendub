@@ -5,7 +5,7 @@ import {
   EventDetails,
   PageHeader,
   CalendarHeader,
-  Header
+  Header,
 } from 'components';
 import { Event } from 'types/Event';
 import './ExplorePage.css';
@@ -19,7 +19,7 @@ const ExplorePage = () => {
 
   useEffect(() => {
     if (!loading) {
-      console.log("Current User:", currentUser);
+      console.log('Current User:', currentUser);
       getEvents();
     }
   }, [loading, currentUser]);
@@ -101,12 +101,10 @@ const ExplorePage = () => {
   return (
     <div>
       <div className="explore-page">
-        <div className="grid">
-          <HeaderTitle />
-          <CalendarHeader
-            currentDate={currentDate}
-            updateCurrentDate={updateCurrentDate}
-          />
+        <div className="header-container">
+          <Header />
+        </div>
+        <div className="explore-page-body">
           <div className="sidebar">
             <PageHeader
               filterEvents={filterEvents}
@@ -122,6 +120,7 @@ const ExplorePage = () => {
           </div>
           <Calendar
             setSelectedEvent={setSelectedEvent}
+            updateCurrentDate={updateCurrentDate}
             events={events}
             updateEvents={updateEvents}
             displayEvents={displayEvents}

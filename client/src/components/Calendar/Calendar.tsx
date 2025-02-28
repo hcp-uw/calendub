@@ -1,11 +1,12 @@
 import './Calendar.css';
-import { CalendarEvent, AddEventModal } from 'components';
+import { CalendarEvent, AddEventModal, CalendarHeader } from 'components';
 import { useRef } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { Event } from 'types/Event';
 
 interface CalendarProps {
   setSelectedEvent: (event: Event) => void;
+  updateCurrentDate: (date: Date) => void;
   events: Event[];
   displayEvents: Event[];
   eventColors: Record<string, string>;
@@ -58,7 +59,6 @@ const Calendar = (props: CalendarProps) => {
       );
       const dateStr = date.toISOString().split('T')[0];
       const dayEvents = displayEvents.filter((event) => event.date === dateStr);
-
       days.push(
         <div key={'day' + day} className="calendar-cell">
           <div className="day">{day > 0 && day <= daysInMonth ? day : ''}</div>
@@ -81,21 +81,27 @@ const Calendar = (props: CalendarProps) => {
   return (
     <div className="calendar">
       <div className="calendar-bar">
-        <select>
-          <option>Month</option>
-        </select>
-        <button onClick={() => addEventRef.current?.showModal()}>
-          <FaPlus size={8} />
-          Add event
-        </button>
-        <AddEventModal
-          addEventRef={addEventRef}
-          events={events}
-          updateEvents={updateEvents}
-          eventColors={eventColors}
+        <CalendarHeader
+          currentDate={currentDate}
+          updateCurrentDate={props.updateCurrentDate}
         />
+        <div className="calendar-options">
+          <select>
+            <option>Month</option>
+          </select>
+          <button onClick={() => addEventRef.current?.showModal()}>
+            <FaPlus size={8} />
+            Add event
+          </button>
+        </div>
       </div>
       <div className="calendar-grid card">{renderCalendarDays()}</div>
+      <AddEventModal
+        addEventRef={addEventRef}
+        events={events}
+        updateEvents={updateEvents}
+        eventColors={eventColors}
+      />
     </div>
   );
 };

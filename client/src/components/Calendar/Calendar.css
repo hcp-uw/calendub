@@ -1,7 +1,18 @@
+.calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  width: fit-content;
+  width: clamp(45rem, 70vw, 80rem);
+}
+
+.calendar-row {
+  width: 100%;
+  flex-direction: row;
 }
 
 .calendar-cell {
@@ -10,10 +21,10 @@
   flex-direction: column;
   gap: 0.25rem;
   padding: 0.375rem;
-  height: 7.5rem;
-  width: 6.5rem;
   border-left: 1px solid #bababa;
   border-top: 1px solid #bababa;
+  width: 100%;
+  height: clamp(7rem, 10vw, 10rem);
 }
 
 .day {
@@ -28,23 +39,17 @@
 
 .calendar-cell:nth-child(-n + 7) {
   border-top: none;
-  height: 0.675rem;
+  height: 1.5rem;
 }
 
 .calendar-cell:nth-child(-n + 14) {
   border-top: none;
 }
 
-.calendar {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
 .calendar-bar {
   display: flex;
   gap: 0.5rem;
-  justify-content: right;
+  justify-content: space-between;
 }
 
 .calendar button {
@@ -95,4 +100,9 @@
   resize: none;
   height: 5rem;
   white-space: pre-wrap;
+}
+
+.calendar-options {
+  display: flex;
+  gap: 0.5rem;
 }
