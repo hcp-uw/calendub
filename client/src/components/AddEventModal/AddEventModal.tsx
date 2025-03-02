@@ -2,9 +2,9 @@ import './AddEventModal.css';
 import { useState, useEffect, useRef } from 'react';
 import { Organizer } from 'types/Organizer';
 import defaultimage from '../../assets/defaultimage.jpg';
-import { format, parseISO, set } from "date-fns";
+import { format, parseISO } from "date-fns";
 import CreateOrganizationModal from '../CreateOrganizationModal/CreateOrganizationModal';
-
+import { FormControl, MenuItem, Select } from "@mui/material";
 
 interface AddEventModalProps {
   isOpen: boolean;
@@ -56,6 +56,8 @@ const AddEventModal: React.FC<AddEventModalProps> = ({ isOpen, onClose }) => {
 
   const [files, setFiles] = useState<File[]>([]);
 
+  const [error, setError] = useState('');
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files;
     if (selectedFiles) {
@@ -65,7 +67,15 @@ const AddEventModal: React.FC<AddEventModalProps> = ({ isOpen, onClose }) => {
   };
 
   const createEventHandler = async () => {
-    // add in error handling
+    if (!title) {
+      setError('Please add an event title.');
+      return;
+    }
+
+    if (!organizerInput) {
+      setError('Please select an organizer.');
+      return;
+    }
 
     const formData = new FormData();
     formData.append('title', title);
@@ -150,7 +160,7 @@ const AddEventModal: React.FC<AddEventModalProps> = ({ isOpen, onClose }) => {
     setSelectingOrganizer(true);
   };
 
-  const handleCreateOrganizer = async (name: string, description: string, picture: File) => {
+  const handleCreateOrganizer = async (name: string, description: string, picture: File | null) => {
     const formData = new FormData();
     formData.append('name', name);
     formData.append('description', description);
@@ -232,63 +242,51 @@ const AddEventModal: React.FC<AddEventModalProps> = ({ isOpen, onClose }) => {
         <div className='date-time-container'>
           {!allDay ? 
             <div className='date-container'>
-              <input type="datetime-local" value={format(startDate, "yyyy-MM-dd'T'HH:mm")} onChange={(e) => updateStartDate(parseISO(e.target.value))} />
-              <span>to</span>
-              <input type="datetime-local" value={format(endDate, "yyyy-MM-dd'T'HH:mm")} onChange={(e) => setEndDate(parseISO(e.target.value))} />
+              <div className='date-picker-container'>
+                <span>starts: </span>
+                <input className="date-picker" type="datetime-local" value={format(startDate, "yyyy-MM-dd'T'HH:mm")} onChange={(e) => updateStartDate(parseISO(e.target.value))} />
+                <div className='allday-container'> 
+                  <span className='allday-label'>All Day</span>
+                  <input className='allday-input' type="checkbox" checked={allDay} onChange={(e) => setAllDay(e.target.checked)}/>
+                </div>
+              </div>
+              <div className='date-picker-container'>
+                <span>ends: </span>
+                <input className="date-picker" type="datetime-local" value={format(endDate, "yyyy-MM-dd'T'HH:mm")} onChange={(e) => setEndDate(parseISO(e.target.value))} />
+              </div>
             </div> 
             :
             <div className='date-container'>
-              <input type="date" value={format(startDate, "yyyy-MM-dd")} onChange={(e) => updateStartDate(parseISO(e.target.value))} />
-              <span>to</span>
-              <input type="date" value={format(endDate, "yyyy-MM-dd")} onChange={(e) => setEndDate(parseISO(e.target.value))} />
+              <div className='date-picker-container'>
+                <span>starts: </span>
+                <input className="date-picker-all-day" type="date" value={format(startDate, "yyyy-MM-dd")} onChange={(e) => updateStartDate(parseISO(e.target.value))} />
+                <div className='allday-container'> 
+                  <span className='allday-label'>All Day</span>
+                  <input className='allday-input' type="checkbox" checked={allDay} onChange={(e) => setAllDay(e.target.checked)}/>
+                </div>
+              </div>
+              <div className='date-picker-container'>
+                <span>ends: </span>
+                <input className="date-picker-all-day" type="date" value={format(endDate, "yyyy-MM-dd")} onChange={(e) => setEndDate(parseISO(e.target.value))} />
+              </div>
             </div> 
           }
         </div>
-        <div className='allday-recurring-container'>
-          <label>
-            All Day <input type="checkbox" checked={allDay} onChange={(e) => setAllDay(e.target.checked)}/>
-          </label>
-          <label>
-            Recurring
-            <select value={recurring} onChange={(e) => setRecurring(e.target.value)}>
-              <option value="">None</option>
-              <option value="daily">Every Day</option>
-              <option value="weekly">Every Week</option>
-              <option value="monthly">Every Month</option>
-              <option value="yearly">Every Year</option>
-              <option value="custom">Custom</option>
-            </select>
-          </label>
-          {recurring !== '' &&
-            <div className="ends-container">
-              <label>
-                Ends
-                <select value={endsOption} onChange={(e) => setEndsOption(e.target.value)}>
-                  <option value="never">Never</option>
-                  <option value="after">After</option>
-                  <option value="on">On</option>
-                </select>
-              </label>
-              {endsOption === 'after' && (
-                <div>
-                  <input
-                    type="number"
-                    min="1"
-                    value={endsAfterCount}
-                    onChange={(e) => setEndsAfterCount(Number(e.target.value))}
-                  />
-                  <span>{endsAfterCount > 1 ? 'occurrences' : 'occurrence'}</span>
-                </div>
-              )}
-              {endsOption === 'on' && (
-                <input
-                  type="date"
-                  value={format(endsOnDate, "yyyy-MM-dd")}
-                  onChange={(e) => setEndsOnDate(parseISO(e.target.value))}
-                />
-              )}
-            </div>
-          }
+        <div className='recurring-container'>
+          <FormControl size='small'>
+            <Select
+              value={recurring}
+              displayEmpty
+              onChange={(e) => setRecurring(e.target.value)}
+            >
+              <MenuItem value="">Does not repeat</MenuItem>
+              <MenuItem value="daily">Repeats Daily</MenuItem>
+              <MenuItem value="weekly">Repeats Weekly</MenuItem>
+              <MenuItem value="monthly">Repeats Monthly</MenuItem>
+              <MenuItem value="yearly">Repeats Yearly</MenuItem>
+              <MenuItem value="custom">Custom...</MenuItem>
+            </Select>
+          </FormControl>
         </div>
         <div className='location-container'>
           <div className='location-type-container'>
@@ -323,16 +321,20 @@ const AddEventModal: React.FC<AddEventModalProps> = ({ isOpen, onClose }) => {
             }
           </div>
         </div>
-        <textarea   className="description-textarea" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
-        {/* TODO: Add tags */}
-        <label>
-          RSVP Required?<input type="checkbox" checked={isRSVPRequired} onChange={() => setIsRSVPRequired(!isRSVPRequired)} /> 
-        </label>
-        {isRSVPRequired && <input type="text" placeholder="RSVP Link" />}
+        <textarea   className="description-textarea" placeholder="Event Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+        {/* <div className='rsvp-container'>
+          <label className='rsvp-label'>
+            RSVP Required?<input className='rsvp-checkbox' type="checkbox" checked={isRSVPRequired} onChange={() => setIsRSVPRequired(!isRSVPRequired)} /> 
+          </label>
+          {isRSVPRequired && <input className='rsvplink-input' type="text" placeholder="RSVP Link" />}
+        </div> */}
         <div className='file-upload'>
           <input className='file-upload-input' type="file" multiple onChange={handleFileChange}/>
         </div>
-        <button onClick={createEventHandler}>Post</button>
+        <div className='footer-container'>
+          {error && <span className="error-text">{error}</span>}
+          <button className='post-button' onClick={createEventHandler}>Post</button>
+        </div>
       </div>
     </div>
   );
