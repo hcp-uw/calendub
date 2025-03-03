@@ -60,7 +60,6 @@ const ExplorePage = () => {
   const [events, setEvents] = useState<Event[]>([]); // actual events kept in state
   const [displayEvents, setDisplayEvents] = useState<Event[]>(events); // what events are displayed on the calendar (this is to allow filtering without losing the original events)
   const [currentDate, setCurrentDate] = useState(new Date()); // the current date being viewed on the calendar (used for month navigation)
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null); // the current event selected by the user
 
   // Filter events by field and value, and sets events to the filtered events
   // e.g. (field: 'type', value: 'Club Meeting') => only show club meetings
@@ -111,15 +110,9 @@ const ExplorePage = () => {
               resetFilters={resetFilters}
               eventColors={eventColors}
             />
-            {selectedEvent && (
-              <EventDetails
-                selectedEvent={selectedEvent}
-                eventColors={eventColors}
-              />
-            )}
+            <div></div>
           </div>
           <Calendar
-            setSelectedEvent={setSelectedEvent}
             updateCurrentDate={updateCurrentDate}
             events={events}
             updateEvents={updateEvents}

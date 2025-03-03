@@ -1,11 +1,15 @@
 import './Calendar.css';
-import { CalendarEvent, AddEventModal, CalendarHeader } from 'components';
-import { useRef } from 'react';
+import {
+  CalendarEvent,
+  AddEventModal,
+  CalendarHeader,
+  EventDetails,
+} from 'components';
+import { useRef, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { Event } from 'types/Event';
 
 interface CalendarProps {
-  setSelectedEvent: (event: Event) => void;
   updateCurrentDate: (date: Date) => void;
   events: Event[];
   displayEvents: Event[];
@@ -16,6 +20,26 @@ interface CalendarProps {
 
 const Calendar = (props: CalendarProps) => {
   const weekDayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+
+  const [eventDetailsPopup, setEventDetailsPopup] = useState({
+    show: false,
+    x: 0,
+    y: 0,
+    event: {} as Event,
+  });
+
+  const closeEventDetailsPopup = () => {
+    setEventDetailsPopup({ ...eventDetailsPopup, show: false });
+  };
+
+  const setSelectedEvent = (event: Event, x: number, y: number) => {
+    setEventDetailsPopup({
+      show: true,
+      x: x,
+      y: y,
+      event: event,
+    });
+  };
 
   const currentDate = props.currentDate;
   const eventColors = props.eventColors;
@@ -67,7 +91,8 @@ const Calendar = (props: CalendarProps) => {
               key={event.id}
               name={event.name}
               color={eventColors[event.type]}
-              onClick={() => props.setSelectedEvent(event)}
+              setSelectedEvent={setSelectedEvent}
+              event={event}
             />
           ))}
         </div>
@@ -95,6 +120,22 @@ const Calendar = (props: CalendarProps) => {
           </button>
         </div>
       </div>
+      {eventDetailsPopup.show && (
+        <div
+          style={{
+            left: eventDetailsPopup.x,
+            top: eventDetailsPopup.y,
+            position: 'absolute',
+            transform: 'translate(-50%, 0%)',
+          }}
+        >
+          <EventDetails
+            selectedEvent={eventDetailsPopup.event}
+            eventColors={eventColors}
+            closeEventDetailsPopup={closeEventDetailsPopup}
+          />
+        </div>
+      )}
       <div className="calendar-grid card">{renderCalendarDays()}</div>
       <AddEventModal
         addEventRef={addEventRef}

@@ -2,14 +2,12 @@ import './EventDetails.css';
 import { Event } from 'types/Event';
 
 interface EventDetailsProps {
+  closeEventDetailsPopup: () => void;
   selectedEvent: Event;
   eventColors: Record<string, string>;
 }
 
 const EventDetails = (props: EventDetailsProps) => {
-  // You can use eventColors to get the color corresponding to the event type
-  // e.g. eventColors[props.selectedEvent.type]
-
   return (
     <div className="event-details card">
       <h2>{props.selectedEvent.name}</h2>
@@ -17,6 +15,7 @@ const EventDetails = (props: EventDetailsProps) => {
       <p>{props.selectedEvent.type}</p>
       <p>{props.selectedEvent.location}</p>
       <p>{props.selectedEvent.description}</p>
+      <button onClick={props.closeEventDetailsPopup}>Close</button>
     </div>
   );
 };
