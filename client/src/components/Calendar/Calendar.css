@@ -56,7 +56,6 @@
   background-color: #aca0d2;
   width: fit-content;
   color: #ffffff;
-  font-family: 'Outfit', sans-serif;
   font-weight: 500;
   font-size: 0.75rem;
   padding: 0.25rem;
@@ -75,7 +74,6 @@
   outline: none;
   cursor: pointer;
   border-bottom: 2px solid #aaaaaa;
-  font-family: 'Outfit', sans-serif;
 }
 
 .calendar select:focus {
@@ -88,7 +86,6 @@
   border: none;
   outline: none;
   border-bottom: 2px solid #d5d5d5;
-  font-family: 'Outfit', sans-serif;
 }
 
 .calendar input:focus,
