@@ -46,6 +46,7 @@ const Calendar = (props: CalendarProps) => {
         <CalendarHeader
           currentDate={props.currentDate}
           updateCurrentDate={props.updateCurrentDate}
+          viewMode={viewMode}
         />
         <div className="calendar-options">
           <select onChange={(e) => setViewMode(e.target.value as 'month' | 'week' | 'day')}>
