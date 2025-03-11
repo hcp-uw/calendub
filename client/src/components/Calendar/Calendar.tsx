@@ -1,13 +1,11 @@
 import './Calendar.css';
-import {
-  CalendarEvent,
-  AddEventModal,
-  CalendarHeader,
-  EventDetails,
-} from 'components';
-import { useRef, useState } from 'react';
+import { useState, useRef } from 'react';
 import { FaPlus } from 'react-icons/fa';
+import { CalendarHeader, AddEventModal, EventDetails } from 'components';
 import { Event } from 'types/Event';
+import MonthView from './MonthView/MonthView';
+import WeekView from './WeekView/WeekView';
+import DayView from './DayView/DayView';
 
 interface CalendarProps {
   updateCurrentDate: (date: Date) => void;
@@ -19,14 +17,15 @@ interface CalendarProps {
 }
 
 const Calendar = (props: CalendarProps) => {
-  const weekDayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-
+  const [viewMode, setViewMode] = useState<'month' | 'week' | 'day'>('month');
   const [eventDetailsPopup, setEventDetailsPopup] = useState({
     show: false,
     x: 0,
     y: 0,
     event: {} as Event,
   });
+
+  const addEventRef = useRef<HTMLDialogElement>(null);
 
   const closeEventDetailsPopup = () => {
     setEventDetailsPopup({ ...eventDetailsPopup, show: false });
@@ -41,78 +40,18 @@ const Calendar = (props: CalendarProps) => {
     });
   };
 
-  const currentDate = props.currentDate;
-  const eventColors = props.eventColors;
-  const displayEvents = props.displayEvents;
-  const events = props.events;
-  const updateEvents = props.updateEvents;
-
-  // Get the number of days in a month
-  const getDaysInMonth = (date: Date) => {
-    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-  };
-
-  // Get the day of the week for the first day of the month
-  const getFirstDayOfMonth = (date: Date) => {
-    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-  };
-
-  // Render the calendar in a grid
-  const renderCalendarDays = () => {
-    const days = [];
-    const daysInMonth = getDaysInMonth(currentDate);
-    const firstDay = getFirstDayOfMonth(currentDate);
-    const totalDayCells =
-      daysInMonth + ((7 - ((daysInMonth + firstDay) % 7)) % 7); // Ensure complete row in grid
-
-    // Days of the week (SUN, MON, TUE, etc.)
-    for (let day = 0; day < 7; day++) {
-      days.push(
-        <div key={'weekDay' + day} className="calendar-cell">
-          <div className="day">{weekDayNames[day]}</div>
-        </div>
-      );
-    }
-
-    // Days of the month
-    for (let day = -firstDay + 1; day <= totalDayCells; day++) {
-      const date = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        day
-      );
-      const dateStr = date.toISOString().split('T')[0];
-      const dayEvents = displayEvents.filter((event) => event.date === dateStr);
-      days.push(
-        <div key={'day' + day} className="calendar-cell">
-          <div className="day">{day > 0 && day <= daysInMonth ? day : ''}</div>
-          {dayEvents.map((event) => (
-            <CalendarEvent
-              key={event.id}
-              name={event.name}
-              color={eventColors[event.type]}
-              setSelectedEvent={setSelectedEvent}
-              event={event}
-            />
-          ))}
-        </div>
-      );
-    }
-
-    return days;
-  };
-
-  const addEventRef = useRef<HTMLDialogElement>(null);
   return (
     <div className="calendar">
       <div className="calendar-bar">
         <CalendarHeader
-          currentDate={currentDate}
+          currentDate={props.currentDate}
           updateCurrentDate={props.updateCurrentDate}
         />
         <div className="calendar-options">
-          <select>
-            <option>Month</option>
+          <select onChange={(e) => setViewMode(e.target.value as 'month' | 'week' | 'day')}>
+            <option value="month">Month</option>
+            <option value="week">Week</option>
+            <option value="day">Day</option>
           </select>
           <button onClick={() => addEventRef.current?.showModal()}>
             <FaPlus size={8} />
@@ -120,6 +59,7 @@ const Calendar = (props: CalendarProps) => {
           </button>
         </div>
       </div>
+
       {eventDetailsPopup.show && (
         <div
           style={{
@@ -131,17 +71,44 @@ const Calendar = (props: CalendarProps) => {
         >
           <EventDetails
             selectedEvent={eventDetailsPopup.event}
-            eventColors={eventColors}
+            eventColors={props.eventColors}
             closeEventDetailsPopup={closeEventDetailsPopup}
           />
         </div>
       )}
-      <div className="calendar-grid card">{renderCalendarDays()}</div>
+
+      <div className="calendar-grid card">
+        {viewMode === 'month' && (
+          <MonthView
+            currentDate={props.currentDate}
+            displayEvents={props.displayEvents}
+            eventColors={props.eventColors}
+            setSelectedEvent={setSelectedEvent}
+          />
+        )}
+        {viewMode === 'week' && (
+          <WeekView 
+            currentDate={props.currentDate}
+            displayEvents={props.displayEvents}
+            eventColors={props.eventColors}
+            setSelectedEvent={setSelectedEvent}
+          />
+        )}
+        {viewMode === 'day' && (
+          <DayView 
+            currentDate={props.currentDate}
+            displayEvents={props.displayEvents}
+            eventColors={props.eventColors}
+            setSelectedEvent={setSelectedEvent}
+          />
+        )}
+      </div>
+
       <AddEventModal
         addEventRef={addEventRef}
-        events={events}
-        updateEvents={updateEvents}
-        eventColors={eventColors}
+        events={props.events}
+        updateEvents={props.updateEvents}
+        eventColors={props.eventColors}
       />
     </div>
   );
