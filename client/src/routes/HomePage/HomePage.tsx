@@ -18,9 +18,20 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [currentSection, setCurrentSection] = useState(0);
   const sectionsRef = useRef<NodeListOf<Element> | null>(null);
-  const isScrolling = useRef(false); // Prevent multiple scrolls at once
+  const isScrolling = useRef(false);
+  const [scrollingEnabled, setScrollingEnabled] = useState(true);
+
+  const removeScroll = () => {
+    setScrollingEnabled(false);
+  }
+
+  const enableScroll = () => {
+    setScrollingEnabled(true);
+  }
 
   useEffect(() => {
+    if (!scrollingEnabled) return;
+
     sectionsRef.current = document.querySelectorAll('.homepage-body > div');
 
     const handleScroll = (event: WheelEvent) => {
@@ -33,7 +44,7 @@ const HomePage: React.FC = () => {
     return () => {
       window.removeEventListener('wheel', handleScroll);
     };
-  }, [currentSection]);
+  }, [currentSection, scrollingEnabled]);
 
   const triggerScroll = (direction: number) => {
     if (isScrolling.current) return;
@@ -56,7 +67,7 @@ const HomePage: React.FC = () => {
   return (
     <div>
       <div className='header-container'>
-        <Header />
+        <Header removeScroll={removeScroll} enableScroll={enableScroll}/>
       </div>
       <div className='homepage-body'>
         <div className='homepage-body-1'>
