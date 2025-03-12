@@ -4,7 +4,8 @@ import {
   Calendar,
   EventDetails,
   PageHeader,
-  CalendarHeader
+  CalendarHeader,
+  Header,
 } from 'components';
 import { Event } from 'types/Event';
 import './ExplorePage.css';
@@ -18,7 +19,7 @@ const ExplorePage = () => {
 
   useEffect(() => {
     if (!loading) {
-      console.log("Current User:", currentUser);
+      console.log('Current User:', currentUser);
       getEvents();
     }
   }, [loading, currentUser]);
@@ -59,7 +60,6 @@ const ExplorePage = () => {
   const [events, setEvents] = useState<Event[]>([]); // actual events kept in state
   const [displayEvents, setDisplayEvents] = useState<Event[]>(events); // what events are displayed on the calendar (this is to allow filtering without losing the original events)
   const [currentDate, setCurrentDate] = useState(new Date()); // the current date being viewed on the calendar (used for month navigation)
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null); // the current event selected by the user
 
   // Filter events by field and value, and sets events to the filtered events
   // e.g. (field: 'type', value: 'Club Meeting') => only show club meetings
@@ -100,27 +100,20 @@ const ExplorePage = () => {
   return (
     <div>
       <div className="explore-page">
-        <div className="grid">
-          <HeaderTitle />
-          <CalendarHeader
-            currentDate={currentDate}
-            updateCurrentDate={updateCurrentDate}
-          />
+        <div className="header-container">
+          <Header />
+        </div>
+        <div className="explore-page-body">
           <div className="sidebar">
             <PageHeader
               filterEvents={filterEvents}
               resetFilters={resetFilters}
               eventColors={eventColors}
             />
-            {selectedEvent && (
-              <EventDetails
-                selectedEvent={selectedEvent}
-                eventColors={eventColors}
-              />
-            )}
+            <div></div>
           </div>
           <Calendar
-            setSelectedEvent={setSelectedEvent}
+            updateCurrentDate={updateCurrentDate}
             events={events}
             updateEvents={updateEvents}
             displayEvents={displayEvents}

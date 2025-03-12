@@ -1,5 +1,19 @@
 .event-details {
-  display: block;
   width: 20rem;
   padding: 1rem;
+}
+
+.event-details h1 {
+  font-size: 1.25rem;
+}
+
+.event-details h2 {
+  font-size: 1rem;
+  color: #4f4f4f;
+}
+
+.event-details p {
+  font-size: 0.8rem;
+  text-wrap: wrap;
+  word-break: break-all;
 }

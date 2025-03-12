@@ -1,11 +1,14 @@
 import './Calendar.css';
-import { CalendarEvent, AddEventModal } from 'components';
-import { useRef } from 'react';
+import { useState, useRef } from 'react';
 import { FaPlus } from 'react-icons/fa';
+import { CalendarHeader, AddEventModal, EventDetails } from 'components';
 import { Event } from 'types/Event';
+import MonthView from './MonthView/MonthView';
+import WeekView from './WeekView/WeekView';
+import DayView from './DayView/DayView';
 
 interface CalendarProps {
-  setSelectedEvent: (event: Event) => void;
+  updateCurrentDate: (date: Date) => void;
   events: Event[];
   displayEvents: Event[];
   eventColors: Record<string, string>;
@@ -14,88 +17,100 @@ interface CalendarProps {
 }
 
 const Calendar = (props: CalendarProps) => {
-  const weekDayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-
-  const currentDate = props.currentDate;
-  const eventColors = props.eventColors;
-  const displayEvents = props.displayEvents;
-  const events = props.events;
-  const updateEvents = props.updateEvents;
-
-  // Get the number of days in a month
-  const getDaysInMonth = (date: Date) => {
-    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-  };
-
-  // Get the day of the week for the first day of the month
-  const getFirstDayOfMonth = (date: Date) => {
-    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-  };
-
-  // Render the calendar in a grid
-  const renderCalendarDays = () => {
-    const days = [];
-    const daysInMonth = getDaysInMonth(currentDate);
-    const firstDay = getFirstDayOfMonth(currentDate);
-    const totalDayCells =
-      daysInMonth + ((7 - ((daysInMonth + firstDay) % 7)) % 7); // Ensure complete row in grid
-
-    // Days of the week (SUN, MON, TUE, etc.)
-    for (let day = 0; day < 7; day++) {
-      days.push(
-        <div key={'weekDay' + day} className="calendar-cell">
-          <div className="day">{weekDayNames[day]}</div>
-        </div>
-      );
-    }
-
-    // Days of the month
-    for (let day = -firstDay + 1; day <= totalDayCells; day++) {
-      const date = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        day
-      );
-      const dateStr = date.toISOString().split('T')[0];
-      const dayEvents = displayEvents.filter((event) => event.date === dateStr);
-
-      days.push(
-        <div key={'day' + day} className="calendar-cell">
-          <div className="day">{day > 0 && day <= daysInMonth ? day : ''}</div>
-          {dayEvents.map((event) => (
-            <CalendarEvent
-              key={event.id}
-              name={event.name}
-              color={eventColors[event.type]}
-              onClick={() => props.setSelectedEvent(event)}
-            />
-          ))}
-        </div>
-      );
-    }
-
-    return days;
-  };
+  const [viewMode, setViewMode] = useState<'month' | 'week' | 'day'>('month');
+  const [eventDetailsPopup, setEventDetailsPopup] = useState({
+    show: false,
+    x: 0,
+    y: 0,
+    event: {} as Event,
+  });
 
   const addEventRef = useRef<HTMLDialogElement>(null);
+
+  const closeEventDetailsPopup = () => {
+    setEventDetailsPopup({ ...eventDetailsPopup, show: false });
+  };
+
+  const setSelectedEvent = (event: Event, x: number, y: number) => {
+    setEventDetailsPopup({
+      show: true,
+      x: x,
+      y: y,
+      event: event,
+    });
+  };
+
   return (
     <div className="calendar">
       <div className="calendar-bar">
-        <select>
-          <option>Month</option>
-        </select>
-        <button onClick={() => addEventRef.current?.showModal()}>
-          <FaPlus size={8} />
-          Add event
-        </button>
-        <AddEventModal
-          addEventRef={addEventRef}
-          events={events}
-          updateEvents={updateEvents}
-          eventColors={eventColors}
+        <CalendarHeader
+          currentDate={props.currentDate}
+          updateCurrentDate={props.updateCurrentDate}
+          viewMode={viewMode}
         />
+        <div className="calendar-options">
+          <select onChange={(e) => setViewMode(e.target.value as 'month' | 'week' | 'day')}>
+            <option value="month">Month</option>
+            <option value="week">Week</option>
+            <option value="day">Day</option>
+          </select>
+          <button onClick={() => addEventRef.current?.showModal()}>
+            <FaPlus size={8} />
+            Add event
+          </button>
+        </div>
       </div>
-      <div className="calendar-grid card">{renderCalendarDays()}</div>
+
+      {eventDetailsPopup.show && (
+        <div
+          style={{
+            left: eventDetailsPopup.x,
+            top: eventDetailsPopup.y,
+            position: 'absolute',
+            transform: 'translate(-50%, 0%)',
+          }}
+        >
+          <EventDetails
+            selectedEvent={eventDetailsPopup.event}
+            eventColors={props.eventColors}
+            closeEventDetailsPopup={closeEventDetailsPopup}
+          />
+        </div>
+      )}
+
+      <div className="calendar-grid card">
+        {viewMode === 'month' && (
+          <MonthView
+            currentDate={props.currentDate}
+            displayEvents={props.displayEvents}
+            eventColors={props.eventColors}
+            setSelectedEvent={setSelectedEvent}
+          />
+        )}
+        {viewMode === 'week' && (
+          <WeekView 
+            currentDate={props.currentDate}
+            displayEvents={props.displayEvents}
+            eventColors={props.eventColors}
+            setSelectedEvent={setSelectedEvent}
+          />
+        )}
+        {viewMode === 'day' && (
+          <DayView 
+            currentDate={props.currentDate}
+            displayEvents={props.displayEvents}
+            eventColors={props.eventColors}
+            setSelectedEvent={setSelectedEvent}
+          />
+        )}
+      </div>
+
+      <AddEventModal
+        addEventRef={addEventRef}
+        events={props.events}
+        updateEvents={props.updateEvents}
+        eventColors={props.eventColors}
+      />
     </div>
   );
 };
