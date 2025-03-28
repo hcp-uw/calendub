@@ -15,6 +15,7 @@
   background-color: #e0dcec;
   font-weight: 600;
   font-style: normal;
+  height: 100vh;
 }
 
 .explore-page .grid {
@@ -38,7 +39,7 @@
 
 .explore-page-body {
   display: flex;
-  margin-top: 5.5rem;
-  margin-bottom: 2rem;
+  margin-top: 5.125rem;
+  margin-bottom: 0.5rem;
   gap: 1rem;
 }
