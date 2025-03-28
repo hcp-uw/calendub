@@ -29,3 +29,24 @@
   border: none;
   cursor: pointer;
 }
+
+.event-details .event-name {
+  width: 95%;
+}
+
+.event-details span {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.event-details .icon {
+  height: 0.875rem;
+  width: 0.875rem;
+  border-radius: 100%;
+}
+
+.event-details .time {
+  color: #4f4f4f;
+  font-weight: 500;
+}
