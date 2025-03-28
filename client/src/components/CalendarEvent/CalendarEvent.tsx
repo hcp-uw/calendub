@@ -12,7 +12,8 @@ interface CalendarEventProps {
 const CalendarEvent = (props: CalendarEventProps) => {
   const showEventDetails = (e: MouseEvent<HTMLElement>) => {
     const loc = e.currentTarget.getBoundingClientRect();
-    const popupHeight = 150;
+    const popupHeight =
+      20 * parseFloat(getComputedStyle(document.documentElement).fontSize); // 20rem in px
     const showAbove = window.innerHeight - (loc.bottom + popupHeight) < 0; // check if the popup will fit below the event
     const gap = 7; // gap between the event and the popup
 
