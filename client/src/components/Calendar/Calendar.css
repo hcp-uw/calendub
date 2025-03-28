@@ -11,7 +11,7 @@
   justify-content: space-between;
 }
 
-.calendar button {
+.calendar-options button {
   background-color: #aca0d2;
   width: fit-content;
   color: #ffffff;

@@ -18,3 +18,14 @@
   text-wrap: wrap;
   word-break: break-all;
 }
+
+.event-details .close-button {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.75rem;
+  font-size: 1.25rem;
+  background: none;
+  color: #4f4f4f;
+  border: none;
+  cursor: pointer;
+}
