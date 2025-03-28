@@ -10,12 +10,16 @@ interface CalendarEventProps {
 }
 
 const CalendarEvent = (props: CalendarEventProps) => {
-  const test = (e: MouseEvent<HTMLElement>) => {
+  const showEventDetails = (e: MouseEvent<HTMLElement>) => {
     const loc = e.currentTarget.getBoundingClientRect();
+    const popupHeight = 150;
+    const showAbove = window.innerHeight - (loc.bottom + popupHeight) < 0; // check if the popup will fit below the event
+    const gap = 7; // gap between the event and the popup
+
     props.setSelectedEvent(
       props.event,
       loc.x + loc.width / 2,
-      loc.y + loc.height * 1.5
+      showAbove ? loc.y - popupHeight - gap : loc.y + loc.height + gap
     );
   };
 
@@ -24,7 +28,7 @@ const CalendarEvent = (props: CalendarEventProps) => {
       <div
         className="label"
         style={{ backgroundColor: props.color }}
-        onClick={test}
+        onClick={showEventDetails}
       >
         {props.name}
       </div>
