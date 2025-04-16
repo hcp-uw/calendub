@@ -1,7 +1,8 @@
 .calendar {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.25rem;
+  height: 100%;
 }
 
 .calendar-bar {
@@ -10,7 +11,7 @@
   justify-content: space-between;
 }
 
-.calendar button {
+.calendar-options button {
   background-color: #aca0d2;
   width: fit-content;
   color: #ffffff;

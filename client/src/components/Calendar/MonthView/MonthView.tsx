@@ -19,12 +19,19 @@ const getFirstDayOfMonth = (date: Date) => {
   return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
 };
 
-const MonthView = ({ currentDate, displayEvents, eventColors, setSelectedEvent }: MonthViewProps) => {
+const MonthView = ({
+  currentDate,
+  displayEvents,
+  eventColors,
+  setSelectedEvent,
+}: MonthViewProps) => {
   const renderCalendarDays = () => {
     const days = [];
     const daysInMonth = getDaysInMonth(currentDate);
     const firstDay = getFirstDayOfMonth(currentDate);
-    const totalDayCells = daysInMonth + ((7 - ((daysInMonth + firstDay) % 7)) % 7); // Ensure full row
+    const totalWeeks = Math.ceil((daysInMonth + firstDay) / 7);
+    const totalDayCells =
+      daysInMonth + ((7 - ((daysInMonth + firstDay) % 7)) % 7); // Ensure full row
 
     for (let day = 0; day < 7; day++) {
       days.push(
@@ -35,7 +42,11 @@ const MonthView = ({ currentDate, displayEvents, eventColors, setSelectedEvent }
     }
 
     for (let day = -firstDay + 1; day <= totalDayCells; day++) {
-      const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+      const date = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        day
+      );
       const dateStr = date.toISOString().split('T')[0];
       const dayEvents = displayEvents.filter((event) => event.date === dateStr);
 
@@ -53,6 +64,8 @@ const MonthView = ({ currentDate, displayEvents, eventColors, setSelectedEvent }
           ))}
         </div>
       );
+
+      document.body.style.setProperty('--week-count', totalWeeks.toString()); // Set the number of weeks in the month;
     }
 
     return days;
